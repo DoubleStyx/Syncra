@@ -18,5 +18,5 @@ public class Entity
 
     public bool Has<T>() where T : IComponent => components.ContainsKey(typeof(T));
 
-    public T Get<T>() where T : IComponent => (T)components[typeof(T));
+    public T Get<T>() where T : IComponent => (T)components[typeof(T)];
 }
