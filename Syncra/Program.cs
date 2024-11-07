@@ -1,6 +1,4 @@
-﻿using Syncra;
-
-namespace Syncra;
+﻿namespace Syncra;
 
 public static class Program
 {

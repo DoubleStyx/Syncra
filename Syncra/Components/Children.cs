@@ -1,5 +1,3 @@
-using Syncra;
-
 namespace Syncra.Components;
 
 public struct Children : IComponent
