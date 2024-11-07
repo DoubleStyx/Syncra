@@ -7,8 +7,11 @@ public struct Children : IComponent
 
 public class ChildrenSystem
 {
-    public void Update()
+    public void Update(Scene scene)
     {
-        
+        foreach (Entity entity in scene.Entities)
+        {
+            
+        }
     }
 }

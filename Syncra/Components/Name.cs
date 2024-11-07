@@ -7,8 +7,11 @@ public struct Name : IComponent
 
 public class NameSystem
 {
-    public void Update()
+    public void Update(Scene scene)
     {
-        
+        foreach (Entity entity in scene.Entities)
+        {
+            
+        }
     }
 }

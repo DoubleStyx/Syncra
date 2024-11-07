@@ -10,7 +10,7 @@ The overall philosophy is to only use the minimum required crates/packages to co
 - VR and desktop support
 - Efficient state synchronization
 - Rendering
-- ECS-style architecture following data-oriented design principles
+- ECS-style architecture
 - Rust backend with C# scene logic
 - Cross-platform support
 - Extensible architecture allowing different data models to be downloaded and used at runtime
@@ -27,12 +27,7 @@ The overall philosophy is to only use the minimum required crates/packages to co
 - Decentralized networking authority
 - HDRP-like rendering specification
 
-## Research Topics
+## Current Research Topics
 
-- What crates to use?
-- How to modularize the data model while making it safe?
-- How to avoid duplication of data across FFI? Use shared memory regions; protobufs?
-- Provide cloud infrastructure directly or provide the tools to do so? Depending on overall direction, maybe a default infrastructure for high-level stuff?
-- Asset variant system?
-- Which cloud provider to use?
 - Website?
+- Using existing libraries for prototyping early before switching to custom implementations?

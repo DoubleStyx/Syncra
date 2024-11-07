@@ -5,6 +5,11 @@ public class Engine
     public List<Scene> Scenes = new List<Scene>();
     public Scene ActiveScene = null;
 
+    public void SetActiveScene(Scene scene)
+    {
+        ActiveScene = scene;
+    }
+
     public void Start()
     {
         if (ActiveScene == null && Scenes.Count > 0)
@@ -12,11 +17,7 @@ public class Engine
 
         while (true)
         {
-            if (ActiveScene != null)
-            {
-                ActiveScene.Update();
-            }
-
+            ActiveScene?.Update();
             Thread.Sleep(16);
         }
     }
