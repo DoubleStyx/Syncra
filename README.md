@@ -1,0 +1,1 @@
+A game-engine engine with a focus toward networked VR and desktop use cases. Isomorphic to a butterfly.
