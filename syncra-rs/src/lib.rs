@@ -6,7 +6,7 @@ mod math;
 mod network;
 mod physics;
 mod render;
-mod scene;
+mod state;
 mod script;
 mod ui;
 mod vr;

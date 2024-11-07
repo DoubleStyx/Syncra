@@ -10,6 +10,8 @@ The overall philosophy is to only use the minimum required crates/packages to co
 - VR and desktop support
 - Efficient state synchronization
 - Rendering
+- ECS-style architecture following data-oriented design principles
+- Rust backend with C# scene logic
 - Cross-platform support
 - Extensible architecture allowing different data models to be downloaded and used at runtime
 - In-game scripting using a paradigm that has a graph-code isomorphism
@@ -28,8 +30,4 @@ The overall philosophy is to only use the minimum required crates/packages to co
 ## Research Topics
 
 - What crates to use?
-- How much to focus on manual implementation of platform-specific differences?
-- How will C# tie into the architecture?
-- Will ECS patterns work well here?
 - How to modularize the data model while making it safe?
-- The general strategy here seems to be to use high-level crates/libraries to start off and gradually reimplement them in lower-level ways as needed.

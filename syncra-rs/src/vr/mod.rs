@@ -1,10 +1,10 @@
 use openxr::{Entry, Instance, SystemId, ViewConfigurationType, EnvironmentBlendMode};
 
-pub struct vr_context {
+pub struct VRContext {
     
 }
 
-impl vr_context {
+impl VRContext {
     pub fn new() -> Self {
         let entry = Entry::linked();
         let instance = entry.create_instance(

@@ -1,2 +1,9 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Engine;
+
+namespace Program;
+
+public static void Main(string[] args)
+{
+    Engine.Engine engine = new Engine.Engine();
+    engine.Start();
+}
