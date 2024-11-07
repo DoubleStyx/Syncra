@@ -1,13 +1,13 @@
-namespace Components;
+namespace Syncra.Components;
 
-public struct Parent : Component
+public struct Parent : IComponent
 {
     public Entity Value;
 }
 
-public class ParentSystem : System
+public class ParentSystem : ISystem
 {
-    public override void Update(Scene.Scene scene)
+    public void Update(Scene scene)
     {
         foreach (var entity in scene.Entities)
         {

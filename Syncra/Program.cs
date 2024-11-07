@@ -1,9 +1,12 @@
-﻿using Engine;
+﻿using Syncra;
 
-namespace Program;
+namespace Syncra;
 
-public static void Main(string[] args)
+public static class Program
 {
-    Engine.Engine engine = new Engine.Engine();
-    engine.Start();
+    public static void Main(string[] args)
+    {
+        Engine engine = new Engine();
+        engine.Start();
+    }
 }

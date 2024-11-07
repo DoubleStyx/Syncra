@@ -1,7 +1,8 @@
 using System.Collections.Generic;
-using Scene;
+using Syncra;
 
-public abstract class System
+namespace Syncra;
+public interface ISystem
 {
     public abstract void Update(Scene scene);
 }

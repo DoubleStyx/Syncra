@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Threading;
 
+namespace Syncra;
 
 public class Engine
 {
-    public List<Scene.Scene> Scenes = new List<Scene.Scene>();
-    public Scene.Scene ActiveScene = null;
+    public List<Scene> Scenes = new List<Scene>();
+    public Scene ActiveScene = null;
 
     public void Start()
     {

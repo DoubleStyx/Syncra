@@ -1,6 +1,9 @@
-namespace Components;
+using Syncra;
+using System.Numerics;
 
-public struct Transform : Component
+namespace Syncra.Components;
+
+public struct Transform : IComponent
 {
     public Vector3 Position;
     public Vector3 Rotation;
@@ -14,9 +17,9 @@ public struct Transform : Component
     }
 }
 
-public class TransformSystem : System
+public class TransformSystem : ISystem
 {
-    public override void Update(Scene.Scene scene)
+    public void Update(Scene scene)
     {
         foreach (var entity in scene.Entities)
         {

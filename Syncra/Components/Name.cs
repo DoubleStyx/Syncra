@@ -1,6 +1,6 @@
-namespace Components;
+namespace Syncra.Components;
 
-public struct Name : Component
+public struct Name : IComponent
 {
     public string Value;
 }

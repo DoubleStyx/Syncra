@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 
-
+namespace Syncra;
 public class Scene
 {
     public List<Entity> Entities = new List<Entity>();
-    public List<System> Systems = new List<System>();
+    public List<ISystem> Systems = new List<ISystem>();
 
     public Entity CreateEntity()
     {
@@ -13,7 +13,7 @@ public class Scene
         return entity;
     }
 
-    public void AddSystem(System system)
+    public void AddSystem(ISystem system)
     {
         Systems.Add(system);
     }

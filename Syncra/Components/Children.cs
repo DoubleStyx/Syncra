@@ -1,6 +1,8 @@
-namespace Components;
+using Syncra;
 
-public struct Children : Component
+namespace Syncra.Components;
+
+public struct Children : IComponent
 {
     public List<Entity> Value;
 }

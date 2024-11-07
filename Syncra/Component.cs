@@ -1,4 +1,6 @@
-public abstract class Component
+namespace Syncra;
+
+public interface IComponent
 {
     
 }
