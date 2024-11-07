@@ -35,3 +35,6 @@ The development strategy will be to heavily rely on existing libraries for proto
 - Website?
 - What kind of ECS variant/style to use?
 - Where to separate subsystems?
+- How to handle build automation?
+- CI/CD?
+- Publishing platforms? Steam, Standalone, Oculus, Epic Games?
