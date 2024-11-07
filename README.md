@@ -2,7 +2,9 @@
 
 A game-engine engine with a focus toward networked VR and desktop use cases. Isomorphic to a butterfly.
 
-The overall philosophy is to only use the minimum required crates/packages to conform to existing specifications. Anything that isn't a specification should be implemented directly.
+The overall philosophy is to only use the minimum required libraries to conform to existing specifications. Anything that isn't a specification should be implemented directly.
+
+The development strategy will be to heavily rely on existing libraries for prototyping and gradually prune them out with more custom implementations.
 
 ## Current Goals
 
@@ -30,4 +32,3 @@ The overall philosophy is to only use the minimum required crates/packages to co
 ## Current Research Topics
 
 - Website?
-- Using existing libraries for prototyping early before switching to custom implementations?
