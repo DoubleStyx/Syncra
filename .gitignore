@@ -417,3 +417,5 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 # ================ End of Visual Studio .gitignore ================
+
+build/

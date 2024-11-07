@@ -33,3 +33,4 @@ The overall philosophy is to only use the minimum required crates to conform to 
 - Will ECS patterns work well here?
 - How to modularize the data model while making it safe?
 - While Rust is the reasonable choice for native code, is there any reason to consider C++ here? I like Rust as a sort of proto-proof-assistant, which fits nicely with the Curry-Howard correspondence, but C++ has a lot of existing libraries that could be useful.
+- The general strategy here seems to be to use high-level crates to start off and gradually reimplement them in lower-level ways as needed.

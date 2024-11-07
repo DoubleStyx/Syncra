@@ -1,0 +1,14 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Syncra",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "${workspaceFolder}/Syncra.py"
+            ],
+            "problemMatcher": [],
+        }
+    ]
+}
