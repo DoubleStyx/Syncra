@@ -15,6 +15,7 @@ The development strategy will be to heavily rely on existing libraries for proto
 - ECS-style architecture
 - Rust backend with C# scene logic
 - Cross-platform support
+- Standalone support
 - Extensible architecture allowing different data models to be downloaded and used at runtime
 - In-game scripting using a paradigm that has a graph-code isomorphism
 - Physics
