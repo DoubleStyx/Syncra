@@ -33,3 +33,5 @@ The development strategy will be to heavily rely on existing libraries for proto
 ## Current Research Topics
 
 - Website?
+- What kind of ECS variant/style to use?
+- Where to separate subsystems?
