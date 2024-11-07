@@ -19,7 +19,11 @@ The overall philosophy is to only use the minimum required crates to conform to 
 - In-game asset creation tools
 - Editor tools
 - Multithreading
+- Native plugin/mod support
+- API and architecture documentation
 - Asynchronous rendering
+- Decentralized networking authority
+- HDRP-like rendering specification
 
 ## Research Topics
 
