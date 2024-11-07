@@ -39,3 +39,4 @@ The development strategy will be to heavily rely on existing libraries for proto
 - CI/CD?
 - Publishing platforms? Steam, Standalone, Oculus, Epic Games?
 - Best way to pass data from managed side to renderer? Both will use ECS; how to efficiently handle interop boundary?
+- Codegen for managed/native ECS?
