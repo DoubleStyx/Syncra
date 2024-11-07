@@ -1,10 +1,18 @@
 ﻿namespace Syncra;
 
-public static class Program
+public class Program
 {
-    public static void Main(string[] args)
+    static void Main(string[] args)
     {
-        Engine engine = new Engine();
-        engine.Start();
+        var game = new World();
+        game.Initialize();
+
+        while (true)
+        {
+            game.Update();
+            System.Threading.Thread.Sleep(16);
+        }
+
+        game.Dispose();
     }
 }
