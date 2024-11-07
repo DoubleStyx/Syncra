@@ -6,6 +6,8 @@ The overall philosophy is to only use the minimum required libraries to conform 
 
 The development strategy will be to heavily rely on existing libraries for prototyping and gradually prune them out with more custom implementations.
 
+A Discord server is available for the project: https://discord.gg/bdVmAyGRH9
+
 ## Current Goals
 
 - Networking
