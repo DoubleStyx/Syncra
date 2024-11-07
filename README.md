@@ -34,3 +34,5 @@ The overall philosophy is to only use the minimum required crates/packages to co
 - How to avoid duplication of data across FFI? Use shared memory regions; protobufs?
 - Provide cloud infrastructure directly or provide the tools to do so? Depending on overall direction, maybe a default infrastructure for high-level stuff?
 - Asset variant system?
+- Which cloud provider to use?
+- Website?
