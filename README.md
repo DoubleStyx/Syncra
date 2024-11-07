@@ -31,3 +31,4 @@ The overall philosophy is to only use the minimum required crates/packages to co
 
 - What crates to use?
 - How to modularize the data model while making it safe?
+- How to avoid duplication of data across FFI? Use shared memory regions; protobufs?
