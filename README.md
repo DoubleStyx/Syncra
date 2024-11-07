@@ -28,3 +28,4 @@ The overall philosophy is to only use the minimum required crates to conform to 
 - How will C# tie into the architecture?
 - Will ECS patterns work well here?
 - How to modularize the data model while making it safe?
+- While Rust is the reasonable choice for native code, is there any reason to consider C++ here?
