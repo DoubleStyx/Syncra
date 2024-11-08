@@ -1,9 +1,9 @@
-use bevy::asset::{Asset, Handle};
-use bevy::prelude::*;
+use bevy_asset::{Asset, Handle};
 use nalgebra;
 use nalgebra::{Vector2, Vector3, Vector4};
+use bevy_reflect;
+use bevy_reflect::Reflect;
 
-#[derive(Asset)]
 pub struct Mesh {
     positions: Vec<Vector3<f32>>,
     normals: Vec<Vector3<f32>>,
