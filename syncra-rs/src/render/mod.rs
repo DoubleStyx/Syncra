@@ -1,3 +1,5 @@
+// state buffering/generation/rendering (might want to separate later)
+
 use wgpu;
 
 pub struct RenderContext {

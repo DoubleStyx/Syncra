@@ -42,3 +42,5 @@ A Discord server is available for the project: https://discord.gg/bdVmAyGRH9
 - Publishing platforms? Steam, Standalone, Oculus, Epic Games?
 - Best way to pass data from managed side to renderer? Both will use ECS; how to efficiently handle interop boundary?
 - Codegen for managed/native ECS?
+- Should the ECS go on the Rust side? Rust protects against unsafe operations while remaining safe during highly concurrent workflows.
+- Could I use Rust for the ECS internally while using C# for the high-level user interaction? My idea was to internally represent the scene using ECS but provide a higher-level abstraction for users looking at the scene graph.

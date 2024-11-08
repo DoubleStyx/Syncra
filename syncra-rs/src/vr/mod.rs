@@ -1,3 +1,5 @@
+// OpenXR logic (support other APIs?)
+
 use openxr::{Entry, Instance, SystemId, ViewConfigurationType, EnvironmentBlendMode};
 
 pub struct VRContext {

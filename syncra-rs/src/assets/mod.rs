@@ -1,0 +1,1 @@
+// asset definitions for any shared configurations or static resources
