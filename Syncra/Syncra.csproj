@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Leopotam.Ecs" Version="1.0.1" />
+    <PackageReference Include="Arch" Version="1.3.3-alpha" />
   </ItemGroup>
 
 </Project>
