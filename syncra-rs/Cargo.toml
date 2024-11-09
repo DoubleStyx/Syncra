@@ -5,8 +5,7 @@ edition = "2021"
 
 [dependencies]
 winit = "0.30"
-wgpu = "23.0"
-openxr = "0.11"
+openxr = { version = "0.19", features = ["loaded"] }
 cpal = "0.15"
 serde = "1.0"
 serde_json = "1.0"
@@ -22,6 +21,14 @@ bevy_ecs = "0.14"
 steam-audio = "0.3"
 bevy_asset = "0.14"
 bevy_reflect = "0.14"
+lazy_static = "1.5"
+rand = "0.8"
+raw-window-handle = "0.6"
+openxr-sys = "0.11"
+libc = "0.2"
+libloading = "0.8"
+ctrlc = "3.4"
+tokio = "1.41"
 
 [target.'cfg(target_os = "windows")'.dependencies]
 d3d12 = "22.0"
@@ -29,5 +36,8 @@ d3d12 = "22.0"
 [target.'cfg(target_os = "macos")'.dependencies]
 metal = "0.30"
 
-[target.'cfg(target_os = "linux")'.dependencies]
-ash = "0.38"
+[target.'cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))'.dependencies]
+ash = { version = "0.38", default-features = false, features = ["loaded"] }
+
+[lib]
+crate-type=["rlib", "cdylib"]
