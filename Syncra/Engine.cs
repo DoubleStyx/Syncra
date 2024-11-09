@@ -10,6 +10,19 @@ public class Engine
         CreateInstance(defaultInstance: true);
     }
 
+    public void Run()
+    {
+        while (true)
+        {
+            foreach (var instance in Instances)
+            {
+                instance.Update();
+            }
+
+            Thread.Sleep(100);
+        }
+    }
+
     private void ChangeCurrentInstance(Instance currentInstance)
     {
         CurrentInstance = currentInstance;
@@ -20,8 +33,7 @@ public class Engine
         Instance instance = new Instance(defaultInstance);
         Instances.Add(instance);
         if (defaultInstance)
-            CurrentInstance = instance;
-        instance.Run();
+            ChangeCurrentInstance(instance);
     }
 
     private void DestroyInstance(Instance instance)

@@ -11,8 +11,7 @@ public class Program
 {
     static void Main(string[] args)
     {
-        
         var engine = new Engine();
-        Console.ReadLine(); // needs better way to keep object alive
+        engine.Run();
     }
 }

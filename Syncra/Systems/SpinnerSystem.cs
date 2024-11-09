@@ -15,6 +15,16 @@ public class SpinnerSystem : IWorldSystem
         {
             var rotationDelta = spinner.RotationSpeed.ToQuaternion(); 
             transform.Rotation = Quaternion.Normalize(transform.Rotation * rotationDelta);
+            
+            /*
+            Console.WriteLine($"Transform.Rotation: {transform.Rotation}");
+                
+            float magnitude = MathF.Sqrt(transform.Rotation.X * transform.Rotation.X +
+                                         transform.Rotation.Y * transform.Rotation.Y +
+                                         transform.Rotation.Z * transform.Rotation.Z +
+                                         transform.Rotation.W * transform.Rotation.W);
+            Console.WriteLine($"Quaternion Magnitude: {magnitude}");
+            */
         });
     }
 }

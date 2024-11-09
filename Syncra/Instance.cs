@@ -1,17 +1,18 @@
+using System.Numerics;
 using Arch.Core;
+using Syncra.Components;
 using Syncra.Systems;
 
 namespace Syncra;
 
 public class Instance
 {
-    private World World = World.Create();
+    public World World = World.Create();
     private Dictionary<ulong, Entity> EntityMap = new();
     private List<IWorldSystem> Systems = new();
     private DateTime StartTime = DateTime.Now;
     private bool networked = true;
     private DateTime lastUpdate = DateTime.Now - TimeSpan.FromMilliseconds(100);
-    private Thread worldThread;
     
     public Instance(bool defaultInstance = false)
     {
@@ -19,29 +20,22 @@ public class Instance
         {
             // default instance initialization
             networked = false;
+            var entity = World.Create(new TransformComponent
+                {
+                    Position = new Vector3(0, 0, 0),
+                    Rotation = Quaternion.Identity,
+                    Scale = Vector3.One
+                },
+                new SpinnerComponent { RotationSpeed = new Vector3(0.1f, 0.2f, 0.3f) });
+            Systems.Add(new SpinnerSystem());
         }
         else
         {
             // networked instance initialization
         }
     }
-
-    public void Run()
-    {
-        Thread thread = new(UpdateLoop);
-        worldThread = thread;
-    }
-
-    private void UpdateLoop()
-    {
-        while (true)
-        {
-            Update();
-            Thread.Sleep(100);
-        }
-    }
     
-    private void Update()
+    public void Update()
     {
         double delta = (DateTime.Now - lastUpdate).TotalNanoseconds / 1000000000;
         foreach (var system in Systems) system.Run(this, delta);
