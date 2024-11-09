@@ -11,7 +11,7 @@ public class Program
 {
     static void Main(string[] args)
     {
-        var vrContext = new VRContext();
+        var xrContext = new XRContext();
 
         var world = World.Create();
 
