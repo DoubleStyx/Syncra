@@ -8,7 +8,7 @@ namespace Syncra.Networking;
 
 public static class Serializers
 {
-    //TODO: a lot of this can probably be optimized with unsafe operations, but i don't feel like doing that right now
+    // TODO: a lot of this can probably be optimized with unsafe operations, but i don't feel like doing that right now
     public static void Write(this Stream stream, Quaternion value)
     {
         stream.Write(value.X);

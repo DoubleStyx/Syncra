@@ -1,5 +1,6 @@
 namespace Syncra.Assets;
 
-public struct Material
+public struct Texture
 {
+    
 }

@@ -5,20 +5,45 @@ namespace Syncra;
 
 public class Instance
 {
-    public World World = World.Create();
-    public Dictionary<ulong, Entity> EntityMap = new();
-    public List<IWorldSystem> WorldSystems = new();
-    public double Time;
-
-    public Instance()
+    private World World = World.Create();
+    private Dictionary<ulong, Entity> EntityMap = new();
+    private List<IWorldSystem> Systems = new();
+    private DateTime StartTime = DateTime.Now;
+    private bool networked = true;
+    private DateTime lastUpdate = DateTime.Now - TimeSpan.FromMilliseconds(100);
+    private Thread worldThread;
+    
+    public Instance(bool defaultInstance = false)
     {
-        WorldSystems.AddRange([
-            new SpinnerSystem(),
-        ]);
+        if (defaultInstance)
+        {
+            // default instance initialization
+            networked = false;
+        }
+        else
+        {
+            // networked instance initialization
+        }
     }
-    public void Update(double delta)
+
+    public void Run()
     {
-        Time += delta;
-        foreach (var system in WorldSystems) system.Run(this, delta);
+        Thread thread = new(UpdateLoop);
+        worldThread = thread;
+    }
+
+    private void UpdateLoop()
+    {
+        while (true)
+        {
+            Update();
+            Thread.Sleep(100);
+        }
+    }
+    
+    private void Update()
+    {
+        double delta = (DateTime.Now - lastUpdate).TotalNanoseconds / 1000000000;
+        foreach (var system in Systems) system.Run(this, delta);
     }
 }
