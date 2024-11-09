@@ -2,10 +2,6 @@
 
 A game-engine engine with a focus toward networked VR and desktop use cases. Isomorphic to a butterfly.
 
-The overall philosophy is to only use the minimum required libraries to conform to existing specifications. Anything that isn't a specification should be implemented directly.
-
-The development strategy will be to heavily rely on existing libraries for prototyping and gradually prune them out with more custom implementations.
-
 A Discord server is available for the project: https://discord.gg/bdVmAyGRH9
 
 ## Current Goals
