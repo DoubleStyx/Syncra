@@ -1,7 +1,5 @@
-// state buffering/generation/rendering (might want to separate later)
-
 use wgpu;
-use crate::state::RENDERERS;
+use wgpu::Surface;
 
 pub struct RenderContext {
     pub instance: wgpu::Instance,
@@ -11,15 +9,11 @@ pub struct RenderContext {
 }
 
 impl RenderContext {
-    pub async fn new(raw_window_handle: raw_window_handle::WindowHandle, raw_display_handle: raw_window_handle::DisplayHandle) -> Self {
+    pub async fn new(surface: Surface) -> Self {
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
             backends: wgpu::Backends::PRIMARY,
             ..Default::default()
         });
-
-        let window = ; // create window from raw handles
-
-        let surface = instance.create_surface(window).unwrap();
 
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
@@ -51,18 +45,14 @@ impl RenderContext {
             instance,
             adapter,
             device,
-            queue
+            queue,
         }
     }
 
-    pub fn update(&self)
-    {
-
+    pub fn update(&self) {
     }
 
-    pub fn render(&self)
-    {
-
+    pub fn render(&self) {
     }
 
     pub fn render_loop(&mut self) {

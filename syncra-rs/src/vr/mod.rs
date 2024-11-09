@@ -5,9 +5,6 @@ use crate::state::VR_CONTEXTS;
 
 
 pub struct VRContext {
-    instance: xr::Instance,
-    system: xr::SystemId,
-    session: Option<xr::Session<xr::Vulkan>>,
     render_context: RenderContext
 }
 
@@ -30,12 +27,11 @@ impl VRContext {
             engine_version: 0,
         };
 
-        let render_context = RenderContext::new(raw_window_handle, raw_display_handle);
+        let surface = ; // get openxr surface
+
+        let render_context = RenderContext::new(surface);
 
         let vr_context = VRContext {
-            instance,
-            system,
-            session: Some(session),
             render_context
         };
 
