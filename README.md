@@ -2,7 +2,7 @@
 
 A game engine with a focus toward networked VR and desktop use cases. Isomorphic to a butterfly.
 
-A Discord server is available for the project: https://discord.gg/bdVmAyGRH9
+A Discord server is available for the project: https://discord.gg/zSQXwKVPm5
 
 ## Current Goals
 
