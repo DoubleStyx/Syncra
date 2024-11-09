@@ -12,3 +12,4 @@ pub mod window;
 pub mod components;
 pub mod assets;
 pub mod systems;
+pub mod state;

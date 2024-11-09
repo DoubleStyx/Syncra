@@ -2,6 +2,7 @@
 using System.Numerics;
 using Arch.Core;
 using Syncra.Components;
+using Syncra.Handles;
 using Syncra.Systems;
 
 namespace Syncra;
@@ -10,6 +11,8 @@ public class Program
 {
     static void Main(string[] args)
     {
+        var vrContext = new VRContext();
+
         var world = World.Create();
 
         var entity = world.Create(new TransformComponent
