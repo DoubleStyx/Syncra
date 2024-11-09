@@ -4,5 +4,5 @@ namespace Syncra.Systems;
 
 public interface IWorldSystem
 {
-    void Run(World world);
+    void Run(Instance instance, double delta);
 }

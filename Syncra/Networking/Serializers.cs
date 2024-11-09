@@ -132,12 +132,6 @@ public static class Serializers
         stream.Read(buffer);
         value = Encoding.UTF8.GetString(buffer);
     }
-    /*
-    public static void Read<T>(this Stream stream, int index, out Sync<T> value) where T : struct
-    {
-        stream.Read(out int i);
-    }
-    */
 
     public delegate void ReadAction<T>(Stream stream, out T value);
     

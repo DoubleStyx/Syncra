@@ -10,24 +10,23 @@ public class Program
 {
     static void Main(string[] args)
     {
-        var world = World.Create();
+        var instance = new Instance();
 
-        var entity = world.Create(new TransformComponent
+        var entity = instance.World.Create(new TransformComponent
             {
                 Position = new Vector3(0, 0, 0),
                 Rotation = Quaternion.Identity,
                 Scale = Vector3.One
             },
             new SpinnerComponent { RotationSpeed = new Vector3(0.1f, 0.2f, 0.3f) });
-
-        var spinnerSystem = new SpinnerSystem();
-
+        
         while (true)
         {
-            spinnerSystem.Run(world);
+            instance.Update(0);
+            
             var queryDescription = new QueryDescription().WithAll<TransformComponent>();
 
-            world.Query<TransformComponent>(in queryDescription, (ref TransformComponent transform) =>
+            instance.World.Query<TransformComponent>(in queryDescription, (ref TransformComponent transform) =>
             {
                 Console.WriteLine($"Transform.Rotation: {transform.Rotation}");
                 
@@ -40,7 +39,5 @@ public class Program
             });
             System.Threading.Thread.Sleep(100);
         }
-
-        world.Dispose();
     }
 }
