@@ -1,43 +1,31 @@
 namespace Syncra;
 
-public class Engine
+public static class Engine
 {
-    private List<Instance> Instances = new List<Instance>();
-    private Instance CurrentInstance;
+    public static Dictionary<string, Instance> Instances { get; private set; }
+    public static string CurrentInstance { get; private set; }
 
-    public Engine()
+    public static void Start()
     {
-        CreateInstance(defaultInstance: true);
+        if (Instances.Count > 0)
+            return;
+        
+        JoinInstance(); // do we want a local home/space?
+        Thread.Sleep(int.MaxValue);
     }
 
-    public void Run()
+    public static void ChangeCurrentInstance(string ID = null)
     {
-        while (true)
-        {
-            foreach (var instance in Instances)
-            {
-                instance.Update();
-            }
-
-            Thread.Sleep(100);
-        }
+        
     }
 
-    private void ChangeCurrentInstance(Instance currentInstance)
+    public static void JoinInstance(string ID = null) // this should create new threads
     {
-        CurrentInstance = currentInstance;
+        
     }
 
-    private void CreateInstance(bool defaultInstance = false)
+    public static void LeaveInstance(string ID = null)
     {
-        Instance instance = new Instance(defaultInstance);
-        Instances.Add(instance);
-        if (defaultInstance)
-            ChangeCurrentInstance(instance);
-    }
-
-    private void DestroyInstance(Instance instance)
-    {
-        Instances.Remove(instance);
+        
     }
 }

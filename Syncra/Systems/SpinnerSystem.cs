@@ -1,30 +1,27 @@
 using System.Numerics;
 using Arch.Core;
+using NLog;
 using Syncra.Components;
 using Syncra.Math;
 
 namespace Syncra.Systems;
 
-public class SpinnerSystem : IWorldSystem
+public class SpinnerSystem : ISystem
 {
-    public void Run(Instance instance, double delta)
+    public void Run(Instance instance)
     {
-        var queryDescription = new QueryDescription().WithAll<TransformComponent, SpinnerComponent>();
+        var queryDescription = new QueryDescription().WithAll<SpinnerSystem>();
 
-        instance.World.Query(in queryDescription, (ref TransformComponent transform, ref SpinnerComponent spinner) =>
+        instance.World.Query(in queryDescription, (ref Syncra.Components.SpinnerNode spinner) =>
         {
-            var rotationDelta = spinner.RotationSpeed.ToQuaternion(); 
-            transform.Rotation = Quaternion.Normalize(transform.Rotation * rotationDelta);
+            var rotationDelta = spinner.RotationSpeed.ToQuaternion();
+            Node node = spinner.Node;
+            node.transform.Rotation = Quaternion.Normalize(node.transform.Rotation * rotationDelta);
             
-            /*
-            Console.WriteLine($"Transform.Rotation: {transform.Rotation}");
-                
-            float magnitude = MathF.Sqrt(transform.Rotation.X * transform.Rotation.X +
-                                         transform.Rotation.Y * transform.Rotation.Y +
-                                         transform.Rotation.Z * transform.Rotation.Z +
-                                         transform.Rotation.W * transform.Rotation.W);
-            Console.WriteLine($"Quaternion Magnitude: {magnitude}");
-            */
+            // temporary debug
+            Program.Logger?.Log(LogLevel.Info, $"Spinner rotation: {node.transform.Rotation}");
+            
+            spinner.Node = node;
         });
     }
 }

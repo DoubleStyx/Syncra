@@ -1,17 +1,12 @@
-﻿using System;
-using System.Numerics;
-using Arch.Core;
-using Syncra.Components;
-using Syncra.Handles;
-using Syncra.Systems;
+﻿using NLog;
 
 namespace Syncra;
 
 public class Program
 {
+    public static Logger Logger = LogManager.GetCurrentClassLogger();
     static void Main(string[] args)
     {
-        var engine = new Engine();
-        engine.Run();
+        Engine.Start();
     }
 }
