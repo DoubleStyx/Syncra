@@ -1,6 +1,6 @@
 namespace Syncra;
 
-public class ISystem
+public interface ISystem
 {
-    
+    public void Run(Instance instance); 
 }
