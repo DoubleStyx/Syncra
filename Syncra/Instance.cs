@@ -1,40 +1,29 @@
 using System.Numerics;
 using Arch.Core;
-using Syncra.Components;
-using Syncra.Systems;
+using Syncra.Nodes;
 
 namespace Syncra;
 
 public class Instance
 {
-    public World World = World.Create();
-    public List<ISystem> Systems = new();
-    public Dictionary<long, int> UUIDTable = new();
-    public WorldAccessLevel WorldAccessLevel;
-    public string IP;
-    public int ID;
-    public bool hidden;
-    public DateTime StartTime;
-    public DateTime LastUpdate;
-    public double LastUpdateDelta;
+    public World Entities { get; }
+    public Dictionary<BigInteger, Node> Nodes { get; }
     
-    public Instance(bool defaultInstance = false, string IP = "127.0.0.1", WorldAccessLevel accessLevel = WorldAccessLevel.Private)
+    public Instance()
     {
-        if (defaultInstance)
-        {
-            WorldAccessLevel = WorldAccessLevel.Private;
-            var entity = World.Create(
-                new SpinnerNode { RotationSpeed = new Vector3(0.1f, 0.2f, 0.3f) });
-            Systems.Add(new SpinnerSystem());
-        }
-        else
-        {
-            // networked instance initialization
-        }
+        Entities = World.Create();
+        Nodes = new Dictionary<BigInteger, Node>();
+        
+        // debug
+        var spinnerNode = new SpinnerNode();
+        Nodes.Add(spinnerNode.UUID.Value, spinnerNode);
     }
     
     public void Update()
     {
-        foreach (var system in Systems) system.Run(this);
+        foreach (var node in Nodes.Values)
+        {
+            node.Update();
+        }
     }
 }

@@ -1,30 +1,41 @@
+using System.Numerics;
+
 namespace Syncra;
 
-public static class Engine
+public class Engine
 {
-    public static Dictionary<string, Instance> Instances { get; private set; }
-    public static string CurrentInstance { get; private set; }
+    public Dictionary<BigInteger, Instance> Instances { get; }
+    public BigInteger CurrentInstance { get; private set; }
 
-    public static void Start()
+    public Engine()
     {
-        if (Instances.Count > 0)
-            return;
-        
-        JoinInstance(); // do we want a local home/space?
-        Thread.Sleep(int.MaxValue);
+        Instances = new Dictionary<BigInteger, Instance>();
+        CurrentInstance = 0;
     }
 
-    public static void ChangeCurrentInstance(string ID = null)
+    public void Start()
+    {
+        while (true)
+        {
+            if (Instances.Count > 0)
+                return;
+        
+            JoinInstance(); // do we want a local home/space?
+            Thread.Sleep(int.MaxValue);
+        }
+    }
+
+    public void ChangeCurrentInstance(string ID = null)
     {
         
     }
 
-    public static void JoinInstance(string ID = null) // this should create new threads
+    public void JoinInstance(string ID = null) // this should create new threads
     {
         
     }
 
-    public static void LeaveInstance(string ID = null)
+    public void LeaveInstance(string ID = null)
     {
         
     }

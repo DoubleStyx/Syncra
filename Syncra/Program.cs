@@ -7,6 +7,7 @@ public class Program
     public static Logger Logger = LogManager.GetCurrentClassLogger();
     static void Main(string[] args)
     {
-        Engine.Start();
+        Engine engine = new Engine();
+        engine.Start();
     }
 }
