@@ -1,5 +1,4 @@
 using System.Numerics;
-using Arch.Core;
 using NLog;
 using Syncra.Components;
 using Syncra.Math;
@@ -16,9 +15,9 @@ public class SpinnerNode : Node
         set => Entity.Set(value);
     }
 
-    public SpinnerNode(World world) : base(world)
+    public SpinnerNode(Instance instance) : base(instance)
     {
-        Entity.Add<RotationSpeed>();
+        Entity.Add(new RotationSpeed());
     }
     
     public override void Update()

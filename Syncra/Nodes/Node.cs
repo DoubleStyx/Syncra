@@ -1,4 +1,3 @@
-using System.Numerics;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Syncra.Components;
@@ -8,8 +7,8 @@ namespace Syncra;
 
 public class Node
 {
-    public Entity Entity { get; }
-
+    protected readonly Entity Entity;
+    public readonly Guid Guid;
     public Name Name
     {
         get => Entity.Get<Name>();
@@ -42,9 +41,14 @@ public class Node
     }
 
 
-    public Node(World world)
+    public Node(Instance instance)
     {
-        Entity = world.Create(new Name(), new Uuid(), new Active(), new Transform(), new Parent(), new Children());
+        Entity = instance.World.Create();
+        Guid = new Guid();
+        // technically there's no protection against adding unauthorized components within-class,
+        // but it's difficult to chain together component additions without it
+        // The number of archetype changes is equal to the number of inheritance levels
+        Entity.Add(new Name(), new Uuid(), new Active(), new Transform(), new Parent(), new Children());
     }
     
     public virtual void Update()

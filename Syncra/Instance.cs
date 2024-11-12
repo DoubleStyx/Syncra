@@ -8,19 +8,21 @@ namespace Syncra;
 
 public class Instance
 {
-    private World World { get; }
+    public World World { get; }
     public Guid Uuid { get; }
     private Dictionary<Type, Dictionary<Guid, Node>> Nodes { get; }
+    public Dictionary<Guid, List<Type>> DirtyComponents { get; } 
     private Task UpdateTask { get; }
     
     public Instance(Guid guid, bool localInstance = false)
     {
         World = World.Create();
-        Nodes = new Dictionary<Type, Dictionary<Guid, Node>>();
         Uuid = guid;
+        Nodes = new Dictionary<Type, Dictionary<Guid, Node>>();
+        DirtyComponents = new Dictionary<Guid, List<Type>>();
         
         // debug
-        var spinnerNode = new SpinnerNode(World);
+        var spinnerNode = new SpinnerNode(this);
         AddNode(spinnerNode);
         spinnerNode.RotationSpeed = new RotationSpeed(new Vector3(1.0f, 1.0f, 1.0f));
         
