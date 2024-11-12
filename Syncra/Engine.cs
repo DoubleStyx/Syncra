@@ -25,7 +25,7 @@ public class Engine
 
     private void JoinInstance(Guid guid)
     {
-        Instance instance = Instances[guid];
+        Instance instance = Instances.TryGetValue(guid, out Instance localInstance) ? localInstance : null;
         if (instance == null)
             instance = new Instance(guid);
         Instances.Add(instance.Uuid, instance);

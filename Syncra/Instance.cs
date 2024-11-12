@@ -11,7 +11,7 @@ public class Instance
     private World World { get; }
     public Guid Uuid { get; }
     private Dictionary<Type, Dictionary<Guid, Node>> Nodes { get; }
-    private Thread UpdateThread { get; }
+    private Task UpdateTask { get; }
     
     public Instance(Guid guid, bool localInstance = false)
     {
@@ -24,8 +24,8 @@ public class Instance
         AddNode(spinnerNode);
         spinnerNode.RotationSpeed = new RotationSpeed(new Vector3(1.0f, 1.0f, 1.0f));
         
-        UpdateThread = new Thread(Update);
-        UpdateThread.Start();
+        UpdateTask = new Task(Update);
+        UpdateTask.Start();
     }
     
     private void AddNode(Node node)
