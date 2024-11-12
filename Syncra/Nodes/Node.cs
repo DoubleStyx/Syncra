@@ -7,8 +7,7 @@ namespace Syncra;
 
 public class Node
 {
-    protected readonly Entity Entity;
-    public readonly Guid Guid;
+    protected readonly Syncra.Entity Entity;
     public Name Name
     {
         get => Entity.Get<Name>();
@@ -39,12 +38,10 @@ public class Node
         get => Entity.Get<Children>();
         set => Entity.Set(value);
     }
-
-
+    
     public Node(Instance instance)
     {
-        Entity = instance.World.Create();
-        Guid = new Guid();
+        Entity = new Entity(instance);
         // technically there's no protection against adding unauthorized components within-class,
         // but it's difficult to chain together component additions without it
         // The number of archetype changes is equal to the number of inheritance levels
