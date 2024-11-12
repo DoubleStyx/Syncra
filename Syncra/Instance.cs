@@ -10,22 +10,32 @@ public class Instance
 {
     private World World { get; }
     public Guid Uuid { get; }
-    private Dictionary<Guid, Node> Nodes { get; }
+    private Dictionary<Type, Dictionary<Guid, Node>> Nodes { get; }
     private Thread UpdateThread { get; }
     
     public Instance(Guid guid, bool localInstance = false)
     {
         World = World.Create();
-        Nodes = new Dictionary<Guid, Node>();
+        Nodes = new Dictionary<Type, Dictionary<Guid, Node>>();
         Uuid = guid;
         
         // debug
         var spinnerNode = new SpinnerNode(World);
-        Nodes.Add(spinnerNode.Uuid.Value, spinnerNode);
+        AddNode(spinnerNode);
         spinnerNode.RotationSpeed = new RotationSpeed(new Vector3(1.0f, 1.0f, 1.0f));
         
         UpdateThread = new Thread(Update);
         UpdateThread.Start();
+    }
+    
+    private void AddNode(Node node)
+    {
+        var nodeType = node.GetType();
+        if (!Nodes.ContainsKey(nodeType))
+        {
+            Nodes[nodeType] = new Dictionary<Guid, Node>();
+        }
+        Nodes[nodeType].Add(node.Uuid.Value, node);
     }
     
     public void Update()
@@ -35,9 +45,12 @@ public class Instance
             // run input systems in sequential-parallel
             
             // run core systems in sequential-parallel
-            foreach (var node in Nodes.Values)
+            if (Nodes.TryGetValue(typeof(SpinnerNode), out var spinnerNodes))
             {
-                node.Update();
+                Parallel.ForEach(spinnerNodes.Values, node =>
+                {
+                    node.Update();
+                });
             }
             
             // run user scripts in parallel
