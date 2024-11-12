@@ -16,12 +16,20 @@ public class Node
         {
             return Entity.Get<Name>();
         }
+        set
+        {
+            Entity.Set(value);
+        }
     }
-    public UUID UUID
+    public Uuid Uuid
     {
         get
         {
-            return Entity.Get<UUID>();
+            return Entity.Get<Uuid>();
+        }
+        set
+        {
+            Entity.Set(value);
         }
     }
     public Active Active
@@ -30,12 +38,20 @@ public class Node
         {
             return Entity.Get<Active>();
         }
+        set
+        {
+            Entity.Set(value);
+        }
     }
     public Transform Transform
     {
         get
         {
             return Entity.Get<Transform>();
+        }
+        set
+        {
+            Entity.Set(value);
         }
     }
     public Parent Parent
@@ -44,6 +60,10 @@ public class Node
         {
             return Entity.Get<Parent>();
         }
+        set
+        {
+            Entity.Set(value);
+        }
     }
     public Children Children
     {
@@ -51,12 +71,15 @@ public class Node
         {
             return Entity.Get<Children>();
         }
+        set
+        {
+            Entity.Set(value);
+        }
     }
 
-    public Node()
+    public Node(World world)
     {
-        Entity = new Entity();
-        Entity.Add<Name, UUID, Active, Transform, Parent, Children>();
+        Entity = world.Create(new Name(), new Uuid(), new Active(), new Transform(), new Parent(), new Children());
     }
     
     public virtual void Update()

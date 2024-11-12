@@ -4,39 +4,40 @@ namespace Syncra;
 
 public class Engine
 {
-    public Dictionary<BigInteger, Instance> Instances { get; }
-    public BigInteger CurrentInstance { get; private set; }
+    private Dictionary<Guid, Instance> Instances { get; }
+    private Instance LocalInstance { get; }
+    private Guid CurrentInstance { get; set; }
 
     public Engine()
     {
-        Instances = new Dictionary<BigInteger, Instance>();
-        CurrentInstance = 0;
+        Instances = new Dictionary<Guid, Instance>();
+        Instance localInstance = new Instance(guid: new Guid(), localInstance: true);
+        Instances.Add(localInstance.Uuid, localInstance);
+        ChangeCurrentInstance(localInstance.Uuid);
     }
 
-    public void Start()
+    private void ChangeCurrentInstance(Guid guid)
     {
-        while (true)
+        Instance instance = Instances[guid];
+        if (instance != null)
+            CurrentInstance = Instances[guid].Uuid;
+    }
+
+    private void JoinInstance(Guid guid)
+    {
+        Instance instance = Instances[guid];
+        if (instance == null)
+            instance = new Instance(guid);
+        Instances.Add(instance.Uuid, instance);
+        
+    }
+
+    private void LeaveInstance(Guid guid)
+    {
+        Instance instance = Instances[guid];
+        if (instance != null)
         {
-            if (Instances.Count > 0)
-                return;
-        
-            JoinInstance(); // do we want a local home/space?
-            Thread.Sleep(int.MaxValue);
+            Instances.Remove(instance.Uuid);
         }
-    }
-
-    public void ChangeCurrentInstance(string ID = null)
-    {
-        
-    }
-
-    public void JoinInstance(string ID = null) // this should create new threads
-    {
-        
-    }
-
-    public void LeaveInstance(string ID = null)
-    {
-        
     }
 }

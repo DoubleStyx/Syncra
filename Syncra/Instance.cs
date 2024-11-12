@@ -1,29 +1,50 @@
 using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 using Arch.Core;
+using Syncra.Components;
 using Syncra.Nodes;
 
 namespace Syncra;
 
 public class Instance
 {
-    public World Entities { get; }
-    public Dictionary<BigInteger, Node> Nodes { get; }
+    private World World { get; }
+    public Guid Uuid { get; }
+    private Dictionary<Guid, Node> Nodes { get; }
+    private Thread UpdateThread { get; }
     
-    public Instance()
+    public Instance(Guid guid, bool localInstance = false)
     {
-        Entities = World.Create();
-        Nodes = new Dictionary<BigInteger, Node>();
+        World = World.Create();
+        Nodes = new Dictionary<Guid, Node>();
+        Uuid = guid;
         
         // debug
-        var spinnerNode = new SpinnerNode();
-        Nodes.Add(spinnerNode.UUID.Value, spinnerNode);
+        var spinnerNode = new SpinnerNode(World);
+        Nodes.Add(spinnerNode.Uuid.Value, spinnerNode);
+        spinnerNode.RotationSpeed = new RotationSpeed(1, 1, 1);
+        
+        UpdateThread = new Thread(Update);
+        UpdateThread.Start();
     }
     
     public void Update()
     {
-        foreach (var node in Nodes.Values)
+        while (true)
         {
-            node.Update();
+            // run input systems in sequential-parallel
+            
+            // run core systems in sequential-parallel
+            foreach (var node in Nodes.Values)
+            {
+                node.Update();
+            }
+            
+            // run user scripts in parallel
+            
+            // run render systems in sequential-parallel
+
+            Thread.Sleep(100); // debug
         }
     }
 }

@@ -2,5 +2,15 @@ namespace Syncra.Components;
 
 public struct Parent
 {
-    public INode Value { get; set; }
+    public Node Value;
+
+    public Parent()
+    {
+        Value = null;
+    }
+
+    public Parent(Node value)
+    {
+        Value = value;
+    }
 }

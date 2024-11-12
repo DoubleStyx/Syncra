@@ -2,5 +2,15 @@ namespace Syncra.Components;
 
 public struct Children
 {
-    public List<INode> Value { get; set; }
+    public List<Node> Value;
+
+    public Children()
+    {
+        Value = new List<Node>();
+    }
+
+    public Children(List<Node> value)
+    {
+        Value = value;
+    }
 }

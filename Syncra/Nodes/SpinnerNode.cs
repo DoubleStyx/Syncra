@@ -1,9 +1,11 @@
 using System.Numerics;
+using Arch.Core;
 using NLog;
 using Syncra.Components;
 using Syncra.Math;
-using Syncra.Types;
 using Arch.Core.Extensions;
+using Syncra.Types;
+
 namespace Syncra.Nodes;
 
 public class SpinnerNode : Node
@@ -14,22 +16,24 @@ public class SpinnerNode : Node
         {
             return Entity.Get<RotationSpeed>();
         }
+        set
+        {
+            Entity.Set(value);
+        }
     }
 
-    public SpinnerNode() : base()
+    public SpinnerNode(World world) : base(world)
     {
         Entity.Add<RotationSpeed>();
     }
     
     public override void Update()
     {
-        var rotationDelta = RotationSpeed.Value.ToQuaternion();
-        Transform transform = Transform;
-        transform.Rotation = Quaternion.Normalize(Transform.Rotation * rotationDelta);
-    
+        Transform = new Transform(Transform.Position, 
+            Quaternion.Normalize(Transform.Rotation * RotationSpeed.Value.ToQuaternion()),
+            Transform.Scale);
+        
         // temporary debug
         Program.Logger?.Log(LogLevel.Info, $"Spinner rotation: {Transform.Rotation}");
-    
-        Entity.Set<Transform>(transform);
     }
 }
