@@ -12,14 +12,8 @@ public class SpinnerNode : Node
 {
     public RotationSpeed RotationSpeed
     {
-        get
-        {
-            return Entity.Get<RotationSpeed>();
-        }
-        set
-        {
-            Entity.Set(value);
-        }
+        get => Entity.Get<RotationSpeed>();
+        set => Entity.Set(value);
     }
 
     public SpinnerNode(World world) : base(world)

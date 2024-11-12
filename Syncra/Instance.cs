@@ -22,7 +22,7 @@ public class Instance
         // debug
         var spinnerNode = new SpinnerNode(World);
         Nodes.Add(spinnerNode.Uuid.Value, spinnerNode);
-        spinnerNode.RotationSpeed = new RotationSpeed(1, 1, 1);
+        spinnerNode.RotationSpeed = new RotationSpeed(new Vector3(1.0f, 1.0f, 1.0f));
         
         UpdateThread = new Thread(Update);
         UpdateThread.Start();

@@ -12,70 +12,35 @@ public class Node
 
     public Name Name
     {
-        get
-        {
-            return Entity.Get<Name>();
-        }
-        set
-        {
-            Entity.Set(value);
-        }
+        get => Entity.Get<Name>();
+        set => Entity.Set(value);
     }
     public Uuid Uuid
     {
-        get
-        {
-            return Entity.Get<Uuid>();
-        }
-        set
-        {
-            Entity.Set(value);
-        }
+        get => Entity.Get<Uuid>();
+        set => Entity.Set(value);
     }
     public Active Active
     {
-        get
-        {
-            return Entity.Get<Active>();
-        }
-        set
-        {
-            Entity.Set(value);
-        }
+        get => Entity.Get<Active>();
+        set => Entity.Set(value);
     }
     public Transform Transform
     {
-        get
-        {
-            return Entity.Get<Transform>();
-        }
-        set
-        {
-            Entity.Set(value);
-        }
+        get => Entity.Get<Transform>();
+        set => Entity.Set(value);
     }
     public Parent Parent
     {
-        get
-        {
-            return Entity.Get<Parent>();
-        }
-        set
-        {
-            Entity.Set(value);
-        }
+        get => Entity.Get<Parent>();
+        set => Entity.Set(value);
     }
     public Children Children
     {
-        get
-        {
-            return Entity.Get<Children>();
-        }
-        set
-        {
-            Entity.Set(value);
-        }
+        get => Entity.Get<Children>();
+        set => Entity.Set(value);
     }
+
 
     public Node(World world)
     {

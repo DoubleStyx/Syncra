@@ -11,8 +11,8 @@ public struct RotationSpeed
         Value = Vector3.Zero;
     }
     
-    public RotationSpeed(float x, float y, float z)
+    public RotationSpeed(Vector3 value)
     {
-        Value = new Vector3(x, y, z);
+        Value = value;
     }
 }
