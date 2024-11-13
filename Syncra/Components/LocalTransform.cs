@@ -4,21 +4,15 @@ namespace Syncra.Components;
 
 public struct LocalTransform
 {
-    public Vector3 position;
-    public Quaternion rotation;
-    public Vector3 scale;
+    public Matrix4x4 value;
 
     public LocalTransform()
     {
-        position = Vector3.Zero;
-        rotation = Quaternion.Identity;
-        scale = Vector3.One;
+        this.value = Matrix4x4.Identity;
     }
 
-    public LocalTransform(Vector3 position, Quaternion rotation, Vector3 scale)
+    public LocalTransform(Matrix4x4 value)
     {
-        this.position = position;
-        this.rotation = rotation;
-        this.scale = scale;
+        this.value = value;
     }
 }

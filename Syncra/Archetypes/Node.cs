@@ -7,9 +7,11 @@ namespace Syncra.Archetypes;
 
 public class Node
 {
-    public static Entity New(World world)
+    public static Entity New(Instance instance)
     {
-        Entity entity = world.Create();
+        Entity entity = instance.World.Create();
+        
+        System.Guid guid = System.Guid.NewGuid();
         
         entity.Add(
             new Name(),
@@ -18,9 +20,11 @@ public class Node
             new GlobalTransform(),
             new Parent(),
             new Children(),
-            new Guid(),
+            new Guid(guid),
             new Components.Archetype(typeof(Node))
             );
+        
+        instance.EntityMap.Add(guid, entity);
 
         return entity;
     }

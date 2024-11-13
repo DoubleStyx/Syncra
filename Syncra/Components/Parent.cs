@@ -2,14 +2,14 @@ namespace Syncra.Components;
 
 public struct Parent
 {
-    public Guid value;
+    public System.Guid value;
 
     public Parent()
     {
-        value = new Guid();
+        value = System.Guid.NewGuid();
     }
 
-    public Parent(Guid value)
+    public Parent(System.Guid value)
     {
         this.value = value;
     }

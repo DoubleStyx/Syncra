@@ -4,24 +4,18 @@ namespace Syncra.Components;
 
 public struct GlobalTransform
 {
-    public Vector3 position;
-    public Quaternion rotation;
-    public Vector3 scale;
+    public Matrix4x4 value;
     public bool dirty;
 
     public GlobalTransform()
     {
-        position = Vector3.Zero;
-        rotation = Quaternion.Identity;
-        scale = Vector3.One;
+        value = Matrix4x4.Identity;   
         dirty = true;
     }
 
-    public GlobalTransform(Vector3 position, Quaternion rotation, Vector3 scale, bool dirty)
+    public GlobalTransform(Matrix4x4 value, bool dirty)
     {
-        this.position = position;
-        this.rotation = rotation;
-        this.scale = scale;
+        this.value = value;
         this.dirty = dirty;
     }
 }

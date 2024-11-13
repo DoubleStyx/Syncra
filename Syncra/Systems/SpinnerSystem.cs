@@ -9,28 +9,29 @@ namespace Syncra.Systems;
 
 public static class SpinnerSystem
 {
-    public static void Update(World world)
+    public static void Update(Instance instance)
     {
-        var query = new QueryDescription().WithAll<Components.Guid, LocalTransform, RotationSpeed>();
-        var components = new List<(Components.Guid, LocalTransform, RotationSpeed)>();
+        var world = instance.World;
+        var query = new QueryDescription().WithAll<Name, LocalTransform, RotationSpeed>();
+        var components = new List<(Name, LocalTransform, RotationSpeed)>();
 
-        // Collect components
-        world.Query(in query, (Entity entity, ref Components.Guid guid, ref LocalTransform localTransform, ref RotationSpeed rotationSpeed) =>
+        world.Query(in query, (Entity entity, ref Name name, ref LocalTransform localTransform, ref RotationSpeed rotationSpeed) =>
         {
-            components.Add((guid, localTransform, rotationSpeed));
+            components.Add((name, localTransform, rotationSpeed));
         });
 
-        // Process components in parallel
         Parallel.ForEach(components, (item) =>
         {
-            var (guid, localTransform, rotationSpeed) = item;
+            var (name, localTransform, rotationSpeed) = item;
 
-            rotationSpeed.value.Y = (float)System.Math.Sin(DateTime.Now.Ticks + guid.value.GetHashCode());
+            rotationSpeed.value.Y = (float)System.Math.Sin(DateTime.Now.Ticks + name.value.GetHashCode());
 
-            localTransform.rotation = Quaternion.Normalize(localTransform.rotation * rotationSpeed.value.ToQuaternion());
+            Quaternion rotationQuaternion = rotationSpeed.value.ToQuaternion();
 
-            // temporary debug
-            Program.Logger?.Log(LogLevel.Info, $"Guid: {guid.value} Spinner rotation: {localTransform.rotation} RotationSpeed: {rotationSpeed.value}");
+            Matrix4x4 rotationMatrix = Matrix4x4.CreateFromQuaternion(rotationQuaternion);
+            localTransform.value = Matrix4x4.Multiply(localTransform.value, rotationMatrix);
+            
+            Program.Logger.Debug($"Local matrix: {localTransform.value}");
         });
     }
 }
