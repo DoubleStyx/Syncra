@@ -1,6 +1,6 @@
 namespace Syncra.Assets;
 
-public struct Shader
+public class Shader
 {
     
 }

@@ -1,43 +1,39 @@
-using System.Numerics;
 using Arch.Core;
-using Syncra.Components;
-using Syncra.Systems;
+using Schedulers;
+using Guid = System.Guid;
 
 namespace Syncra;
 
 public class Instance
 {
-    public World World = World.Create();
-    private Dictionary<ulong, Entity> EntityMap = new();
-    private List<IWorldSystem> Systems = new();
-    private DateTime StartTime = DateTime.Now;
-    private bool networked = true;
-    private DateTime lastUpdate = DateTime.Now - TimeSpan.FromMilliseconds(100);
+    public World World { get; }
+    public Dictionary<Guid, Entity> EntityMap { get; }
+    public Guid Guid { get; }
     
-    public Instance(bool defaultInstance = false)
-    {
-        if (defaultInstance)
-        {
-            // default instance initialization
-            networked = false;
-            var entity = World.Create(new TransformComponent
-                {
-                    Position = new Vector3(0, 0, 0),
-                    Rotation = Quaternion.Identity,
-                    Scale = Vector3.One
-                },
-                new SpinnerComponent { RotationSpeed = new Vector3(0.1f, 0.2f, 0.3f) });
-            Systems.Add(new SpinnerSystem());
-        }
-        else
-        {
-            // networked instance initialization
-        }
-    }
+    public DateTime UpdateStartTime { get; set; }
     
-    public void Update()
+    public TimeSpan TickInterval { get; set; }
+    
+    public Instance(bool localInstance = false)
     {
-        double delta = (DateTime.Now - lastUpdate).TotalNanoseconds / 1000000000;
-        foreach (var system in Systems) system.Run(this, delta);
+        TickInterval = TimeSpan.FromMilliseconds(100);
+        World = World.Create();
+        Guid = Guid.NewGuid();
+        EntityMap = new Dictionary<Guid, Entity>();
+        
+        World.SharedJobScheduler = new(
+            new JobScheduler.Config
+            {
+                ThreadPrefixName = "Syncra",
+                ThreadCount = 8,
+                MaxExpectedConcurrentJobs = 64,
+                StrictAllocationMode = false,
+            }
+        );
+        
+        // debug start
+        for (int i = 0; i < 1; i++)
+            Archetypes.SpinnerNode.New(this);
+        // debug end
     }
 }

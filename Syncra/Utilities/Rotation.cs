@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Syncra.Math;
+namespace Syncra.Utilities;
 
 public static class Rotation
 {

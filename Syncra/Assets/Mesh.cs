@@ -1,4 +1,6 @@
-﻿namespace Syncra.Assets;
-public struct Mesh
+namespace Syncra.Assets;
+
+public class Mesh
 {
+    
 }
