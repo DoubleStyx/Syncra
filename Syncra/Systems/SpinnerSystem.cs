@@ -13,26 +13,15 @@ public static class SpinnerSystem
     {
         var world = instance.World;
         var query = new QueryDescription().WithAll<Name, LocalTransform, RotationSpeed>();
-        var components = new List<(Name, LocalTransform, RotationSpeed)>();
 
-        world.Query(in query, (Entity entity, ref Name name, ref LocalTransform localTransform, ref RotationSpeed rotationSpeed) =>
+        world.ParallelQuery(in query, (ref Name name, ref LocalTransform localTransform, ref RotationSpeed rotationSpeed) =>
         {
-            components.Add((name, localTransform, rotationSpeed));
-        });
-
-        Parallel.ForEach(components, (item) =>
-        {
-            var (name, localTransform, rotationSpeed) = item;
-
-            rotationSpeed.value.Y = 1f;
-            
+            rotationSpeed.value.Y = 0.1f;
             Quaternion rotationQuaternion = rotationSpeed.value.ToQuaternion();
-
             Matrix4x4 rotationMatrix = Matrix4x4.CreateFromQuaternion(rotationQuaternion);
-            Program.Logger?.Debug($"Rotation matrix: {rotationMatrix}");
-            
             localTransform.value = Matrix4x4.Multiply(localTransform.value, rotationMatrix);
-            Program.Logger.Debug($"Local matrix: {localTransform.value}");
+            
+            Program.Logger?.Log(LogLevel.Info, $"Local transform: {localTransform.value}");
         });
     }
 }
