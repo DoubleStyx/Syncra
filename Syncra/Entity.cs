@@ -5,14 +5,11 @@ namespace Syncra;
 
 public class Entity
 {
-    public readonly Guid Guid;
     private readonly Arch.Core.Entity Value;
-    private readonly Instance Instance;
 
     public Entity(Instance instance)
     {
         Value = instance.World.Create();
-        Instance = instance;
     }
 
     public void Add<T>(T component)
@@ -29,14 +26,17 @@ public class Entity
     {
         Value.Set(component);
 
-        if (!Instance.DirtyComponents.ContainsKey(Guid))
+        var instance = Get<Components.Instance>().Value;
+        var guid = Get<Components.Guid>().Value;
+
+        if (!instance.DirtyComponents.ContainsKey(guid))
         {
-            Instance.DirtyComponents[Guid] = new List<Type>();
+            instance.DirtyComponents[guid] = new List<Type>();
         }
 
-        if (!Instance.DirtyComponents[Guid].Contains(typeof(T)))
+        if (!instance.DirtyComponents[guid].Contains(typeof(T)))
         {
-            Instance.DirtyComponents[Guid].Add(typeof(T));
+            instance.DirtyComponents[guid].Add(typeof(T));
         }
     }
 }

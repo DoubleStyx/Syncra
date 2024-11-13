@@ -38,7 +38,7 @@ public class Instance
         {
             Nodes[nodeType] = new Dictionary<Guid, Node>();
         }
-        Nodes[nodeType].Add(node.Entity.Guid, node);
+        Nodes[nodeType].Add(node.Entity.Get<Components.Guid>().Value, node);
     }
     
     public void Update()
@@ -46,6 +46,8 @@ public class Instance
         while (true)
         {
             // run input systems in sequential-parallel
+            
+            // process incoming changesets
             
             // run core systems in sequential-parallel
             if (Nodes.TryGetValue(typeof(SpinnerNode), out var spinnerNodes))
@@ -57,6 +59,8 @@ public class Instance
             }
             
             // run user scripts in parallel
+            
+            // submit changesets
             
             // run render systems in sequential-parallel
 
