@@ -14,6 +14,7 @@ public class Instance
     public Guid Guid { get; }
     private Task UpdateTask { get; }
     private DateTime UpdateStartTime { get; set; }
+    private TimeSpan LastUpdateTime { get; set; }
     private TimeSpan TickInterval { get; set; }
     
     public Instance(bool localInstance = false)
@@ -63,6 +64,7 @@ public class Instance
 
             // throttle with update rate
             var frameTime = DateTime.Now - UpdateStartTime;
+            LastUpdateTime = frameTime;
             if (frameTime < TickInterval)
             Thread.Sleep(TickInterval - frameTime);
         }

@@ -24,13 +24,14 @@ public static class SpinnerSystem
         {
             var (name, localTransform, rotationSpeed) = item;
 
-            rotationSpeed.value.Y = (float)System.Math.Sin(DateTime.Now.Ticks + name.value.GetHashCode());
-
+            rotationSpeed.value.Y = 1f;
+            
             Quaternion rotationQuaternion = rotationSpeed.value.ToQuaternion();
 
             Matrix4x4 rotationMatrix = Matrix4x4.CreateFromQuaternion(rotationQuaternion);
-            localTransform.value = Matrix4x4.Multiply(localTransform.value, rotationMatrix);
+            Program.Logger?.Debug($"Rotation matrix: {rotationMatrix}");
             
+            localTransform.value = Matrix4x4.Multiply(localTransform.value, rotationMatrix);
             Program.Logger.Debug($"Local matrix: {localTransform.value}");
         });
     }
