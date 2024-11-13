@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Syncra.Types;
+namespace Syncra.Components;
 
 public struct Transform
 {

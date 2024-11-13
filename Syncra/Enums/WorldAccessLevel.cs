@@ -1,4 +1,4 @@
-namespace Syncra;
+namespace Syncra.Enums;
 
 public enum WorldAccessLevel
 {

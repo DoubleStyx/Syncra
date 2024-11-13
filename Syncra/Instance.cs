@@ -3,21 +3,22 @@ using System.Security.Cryptography.X509Certificates;
 using Arch.Core;
 using Syncra.Components;
 using Syncra.Nodes;
+using Guid = System.Guid;
 
 namespace Syncra;
 
 public class Instance
 {
     public World World { get; }
-    public Guid Uuid { get; }
+    public Guid Guid { get; }
     private Dictionary<Type, Dictionary<Guid, Node>> Nodes { get; }
     public Dictionary<Guid, List<Type>> DirtyComponents { get; } 
     private Task UpdateTask { get; }
     
-    public Instance(Guid guid, bool localInstance = false)
+    public Instance(bool localInstance = false)
     {
         World = World.Create();
-        Uuid = guid;
+        Guid = Guid.NewGuid();
         Nodes = new Dictionary<Type, Dictionary<Guid, Node>>();
         DirtyComponents = new Dictionary<Guid, List<Type>>();
         
@@ -37,7 +38,7 @@ public class Instance
         {
             Nodes[nodeType] = new Dictionary<Guid, Node>();
         }
-        Nodes[nodeType].Add(node.Uuid.Value, node);
+        Nodes[nodeType].Add(node.Entity.Guid, node);
     }
     
     public void Update()

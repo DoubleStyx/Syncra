@@ -1,34 +1,32 @@
-using System.Numerics;
-
 namespace Syncra;
 
 public class Engine
 {
     private Dictionary<Guid, Instance> Instances { get; }
-    private Instance LocalInstance { get; }
+    private Guid LocalInstance { get; }
     private Guid CurrentInstance { get; set; }
 
     public Engine()
     {
         Instances = new Dictionary<Guid, Instance>();
-        Instance localInstance = new Instance(guid: new Guid(), localInstance: true);
-        Instances.Add(localInstance.Uuid, localInstance);
-        ChangeCurrentInstance(localInstance.Uuid);
+        Instance localInstance = new Instance(localInstance: true);
+        Instances.Add(localInstance.Guid, localInstance);
+        ChangeCurrentInstance(localInstance.Guid);
     }
 
     private void ChangeCurrentInstance(Guid guid)
     {
         Instance instance = Instances[guid];
         if (instance != null)
-            CurrentInstance = Instances[guid].Uuid;
+            CurrentInstance = Instances[guid].Guid;
     }
 
     private void JoinInstance(Guid guid)
     {
         Instance instance = Instances.TryGetValue(guid, out Instance localInstance) ? localInstance : null;
         if (instance == null)
-            instance = new Instance(guid);
-        Instances.Add(instance.Uuid, instance);
+            instance = new Instance();
+        Instances.Add(instance.Guid, instance);
         
     }
 
@@ -37,7 +35,7 @@ public class Engine
         Instance instance = Instances[guid];
         if (instance != null)
         {
-            Instances.Remove(instance.Uuid);
+            Instances.Remove(instance.Guid);
         }
     }
 }

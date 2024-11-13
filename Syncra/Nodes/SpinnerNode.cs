@@ -2,8 +2,6 @@ using System.Numerics;
 using NLog;
 using Syncra.Components;
 using Syncra.Math;
-using Arch.Core.Extensions;
-using Syncra.Types;
 
 namespace Syncra.Nodes;
 
@@ -27,6 +25,6 @@ public class SpinnerNode : Node
             Transform.Scale);
         
         // temporary debug
-        Program.Logger?.Log(LogLevel.Info, $"Spinner rotation: {Transform.Rotation}");
+        Program.Logger?.Log(LogLevel.Info, $"Spinner rotation: {Transform.Rotation} RotationSpeed: {RotationSpeed.Value}");
     }
 }

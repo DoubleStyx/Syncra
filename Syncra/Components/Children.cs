@@ -1,3 +1,5 @@
+using Syncra.Nodes;
+
 namespace Syncra.Components;
 
 public struct Children
