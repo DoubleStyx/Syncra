@@ -14,6 +14,8 @@ public class Instance
     private Dictionary<Type, Dictionary<Guid, Node>> Nodes { get; }
     public Dictionary<Guid, List<Type>> DirtyComponents { get; } 
     private Task UpdateTask { get; }
+    private DateTime UpdateStartTime { get; set; }
+    private TimeSpan TickInterval { get; set; }
     
     public Instance(bool localInstance = false)
     {
@@ -21,6 +23,7 @@ public class Instance
         Guid = Guid.NewGuid();
         Nodes = new Dictionary<Type, Dictionary<Guid, Node>>();
         DirtyComponents = new Dictionary<Guid, List<Type>>();
+        TickInterval = TimeSpan.FromMilliseconds(100);
         
         // debug
         var spinnerNode = new SpinnerNode(this);
@@ -45,11 +48,22 @@ public class Instance
     {
         while (true)
         {
-            // run input systems in sequential-parallel
+            UpdateStartTime = DateTime.Now;
             
             // process incoming changesets
             
-            // run core systems in sequential-parallel
+            // fetch async input buffer
+            
+            // run core system 1 in parallel
+            
+            // run user scripts for after1 hook in parallel using updateOrder for passes
+            
+            // run core system 2 in parallel
+            
+            // run user scripts for after2 hook in parallel using updateOrder for passes
+            
+            // etc...
+            
             if (Nodes.TryGetValue(typeof(SpinnerNode), out var spinnerNodes))
             {
                 Parallel.ForEach(spinnerNodes.Values, node =>
@@ -58,13 +72,14 @@ public class Instance
                 });
             }
             
-            // run user scripts in parallel
+            // push to async render buffer
             
             // submit changesets
-            
-            // run render systems in sequential-parallel
 
-            Thread.Sleep(100); // debug
+            // throttle with update rate
+            var frameTime = DateTime.Now - UpdateStartTime;
+            if (frameTime < TickInterval)
+            Thread.Sleep(TickInterval - frameTime);
         }
     }
 }
