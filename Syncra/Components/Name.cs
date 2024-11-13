@@ -2,15 +2,15 @@ namespace Syncra.Components;
 
 public struct Name
 {
-    public string Value;
+    public string value;
 
     public Name()
     {
-        Value = "Node";
+        value = "Node";
     }
 
     public Name(string value)
     {
-        Value = value;
+        this.value = value;
     }
 }

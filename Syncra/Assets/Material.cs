@@ -1,6 +1,6 @@
 namespace Syncra.Types;
 
-public struct Material
+public class Material
 {
     
 }

@@ -1,18 +1,16 @@
-using Syncra.Nodes;
-
 namespace Syncra.Components;
 
 public struct Parent
 {
-    public Node Value;
+    public Guid value;
 
     public Parent()
     {
-        Value = null;
+        value = new Guid();
     }
 
-    public Parent(Node value)
+    public Parent(Guid value)
     {
-        Value = value;
+        this.value = value;
     }
 }

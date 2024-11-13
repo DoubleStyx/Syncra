@@ -2,15 +2,15 @@ namespace Syncra.Components;
 
 public struct Guid
 {
-    public System.Guid Value;
+    public System.Guid value;
 
     public Guid()
     {
-        Value = System.Guid.NewGuid();
+        value = System.Guid.NewGuid();
     }
 
     public Guid(System.Guid value)
     {
-        Value = value;
+        this.value = value;
     }
 }

@@ -16,14 +16,14 @@ public class Engine
 
     private void ChangeCurrentInstance(Guid guid)
     {
-        Instance instance = Instances[guid];
+        Instance? instance = Instances[guid];
         if (instance != null)
             CurrentInstance = Instances[guid].Guid;
     }
 
     private void JoinInstance(Guid guid)
     {
-        Instance instance = Instances.TryGetValue(guid, out Instance localInstance) ? localInstance : null;
+        Instance? instance = Instances.TryGetValue(guid, out Instance localInstance) ? localInstance : null;
         if (instance == null)
             instance = new Instance();
         Instances.Add(instance.Guid, instance);
@@ -32,7 +32,7 @@ public class Engine
 
     private void LeaveInstance(Guid guid)
     {
-        Instance instance = Instances[guid];
+        Instance? instance = Instances[guid];
         if (instance != null)
         {
             Instances.Remove(instance.Guid);

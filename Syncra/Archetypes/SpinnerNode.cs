@@ -1,27 +1,28 @@
-using System.Numerics;
 using Arch.Core;
 using Arch.Core.Extensions;
-using NLog;
 using Syncra.Components;
-using Syncra.Math;
+using Guid = Syncra.Components.Guid;
 
-namespace Syncra.Nodes;
+namespace Syncra.Archetypes;
 
-public struct SpinnerNode : Node
+public class SpinnerNode
 {
-    
-    public SpinnerNode(Instance instance)
+    public static Entity New(World world)
     {
-        Entity.Add(new RotationSpeed());
-    }
-    
-    public override void Update()
-    {
-        Transform.Rotation = Quaternion.Normalize(Transform.Rotation * RotationSpeed.Value.ToQuaternion());
-    
-        // temporary debug
-        Program.Logger?.Log(LogLevel.Info, $"Spinner rotation: {Transform.Rotation} RotationSpeed: {RotationSpeed.Value}");
-        
+        Entity entity = world.Create();
 
+        entity.Add(
+            new Name(),
+            new Active(),
+            new LocalTransform(),
+            new GlobalTransform(),
+            new Parent(),
+            new Children(),
+            new Guid(),
+            new RotationSpeed(),
+            new Components.Archetype(typeof(SpinnerNode))
+            );
+
+        return entity;
     }
 }

@@ -1,15 +1,10 @@
 namespace Syncra.Components;
 
-public struct Type
+public struct Archetype
 {
-    public System.Type type;
+    public Type type;
 
-    public Type()
-    {
-        this.type = null;
-    }
-
-    public Type(System.Type type)
+    public Archetype(Type type)
     {
         this.type = type;
     }

@@ -4,15 +4,15 @@ namespace Syncra.Components;
 
 public struct RotationSpeed
 {
-    public Vector3 Value;
+    public Vector3 value;
 
     public RotationSpeed()
     {
-        Value = Vector3.Zero;
+        value = Vector3.Zero;
     }
     
     public RotationSpeed(Vector3 value)
     {
-        Value = value;
+        this.value = value;
     }
 }

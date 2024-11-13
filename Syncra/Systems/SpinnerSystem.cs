@@ -15,22 +15,22 @@ public static class SpinnerSystem
         var components = new List<(Components.Guid, LocalTransform, RotationSpeed)>();
 
         // Collect components
-        world.Query(in query, (Entity entity, ref Components.Guid guid, ref LocalTransform transform, ref RotationSpeed rotationSpeed) =>
+        world.Query(in query, (Entity entity, ref Components.Guid guid, ref LocalTransform localTransform, ref RotationSpeed rotationSpeed) =>
         {
-            components.Add((guid, transform, rotationSpeed));
+            components.Add((guid, localTransform, rotationSpeed));
         });
 
         // Process components in parallel
         Parallel.ForEach(components, (item) =>
         {
-            var (guid, transform, rotationSpeed) = item;
+            var (guid, localTransform, rotationSpeed) = item;
 
             rotationSpeed.value.Y = (float)System.Math.Sin(DateTime.Now.Ticks + guid.value.GetHashCode());
 
-            transform.rotation = Quaternion.Normalize(transform.rotation * rotationSpeed.value.ToQuaternion());
+            localTransform.rotation = Quaternion.Normalize(localTransform.rotation * rotationSpeed.value.ToQuaternion());
 
             // temporary debug
-            Program.Logger?.Log(LogLevel.Info, $"Guid: {guid.value} Spinner rotation: {transform.rotation} RotationSpeed: {rotationSpeed.value}");
+            Program.Logger?.Log(LogLevel.Info, $"Guid: {guid.value} Spinner rotation: {localTransform.rotation} RotationSpeed: {rotationSpeed.value}");
         });
     }
 }

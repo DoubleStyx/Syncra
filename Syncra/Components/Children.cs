@@ -1,18 +1,17 @@
-using Syncra.Nodes;
 
 namespace Syncra.Components;
 
 public struct Children
 {
-    public List<Node> Value;
+    public List<Guid> value;
 
     public Children()
     {
-        Value = new List<Node>();
+        value = new List<Guid>();
     }
 
-    public Children(List<Node> value)
+    public Children(List<Guid> value)
     {
-        Value = value;
+        value = value;
     }
 }

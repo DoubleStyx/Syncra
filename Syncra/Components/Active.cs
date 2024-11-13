@@ -2,15 +2,15 @@ namespace Syncra.Components;
 
 public struct Active
 {
-    public bool Value;
+    public bool value;
 
     public Active()
     {
-        Value = true;
+        value = true;
     }
 
     public Active(bool value)
     {
-        Value = value;
+        value = value;
     }
 }
