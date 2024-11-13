@@ -1,9 +1,8 @@
-using System.Collections.Concurrent;
 using System.Numerics;
 using Arch.Core;
 using NLog;
 using Syncra.Components;
-using Syncra.Math;
+using Syncra.Utilities;
 
 namespace Syncra.Systems;
 

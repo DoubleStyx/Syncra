@@ -1,4 +1,4 @@
-namespace Syncra.Helpers;
+namespace Syncra.Utilities;
 
 public static class BitFlagHelper
 {

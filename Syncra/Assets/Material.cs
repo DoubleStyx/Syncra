@@ -1,4 +1,4 @@
-namespace Syncra.Types;
+namespace Syncra.Assets;
 
 public class Material
 {
