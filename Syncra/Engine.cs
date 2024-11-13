@@ -25,9 +25,11 @@ public class Engine
             // We need full control over each thread later on
             foreach (var instance in Instances.Values)
             {
+                // sleep to meet tick interval
                 if (DateTime.Now - instance.UpdateStartTime < instance.TickInterval)
                     continue;
                 
+                // throttle secondary instances
                 if (instance.Guid != CurrentInstance &&
                     DateTime.Now - instance.UpdateStartTime < TimeSpan.FromSeconds(1))
                     continue;
@@ -38,12 +40,12 @@ public class Engine
 
                 // fetch async input buffer
 
-                // run core system 1
+                // run core system 1 in parallel
                 //ParentSystem.Update(this);
 
                 // run user scripts for after1 hook in parallel using updateOrder for passes
 
-                // run core system 2
+                // run core system 2 in parallel
                 SpinnerSystem.Update(instance);
 
                 // run user scripts for after2 hook in parallel using updateOrder for passes
@@ -57,6 +59,10 @@ public class Engine
         }
     }
 
+    // we'll have to think about thread safety during instance switching
+    // as well as how the renderer itself manages/shares resources
+    // tbh I don't think we'll keep any GPU resources for non-active
+    // instances loaded
     private void ChangeCurrentInstance(Guid guid)
     {
         Instance? instance = Instances[guid];
@@ -70,9 +76,9 @@ public class Engine
         if (instance == null)
             instance = new Instance();
         Instances.Add(instance.Guid, instance);
-        
     }
 
+    // needs to switch to the last used/created instance
     private void LeaveInstance(Guid guid)
     {
         Instance? instance = Instances[guid];
