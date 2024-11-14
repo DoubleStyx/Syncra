@@ -1,9 +1,9 @@
 using System.Numerics;
-using Syncra.Networking;
 
-namespace Syncra.DataTypes;
+namespace Syncra.Types;
 
-public struct BoneRestTransforms
+// Better namespace for this?
+public struct BoneRestTransform
 {
     public int Index;
     public int Parent;

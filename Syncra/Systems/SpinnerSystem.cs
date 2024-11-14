@@ -1,30 +1,26 @@
 using System.Numerics;
 using Arch.Core;
+using NLog;
 using Syncra.Components;
-using Syncra.Math;
+using Syncra.Utilities;
 
 namespace Syncra.Systems;
 
-public class SpinnerSystem : IWorldSystem
+public static class SpinnerSystem
 {
-    public void Run(Instance instance, double delta)
+    public static void Update(Instance instance)
     {
-        var queryDescription = new QueryDescription().WithAll<TransformComponent, SpinnerComponent>();
+        var world = instance.World;
+        var query = new QueryDescription().WithAll<Name, LocalTransform, RotationSpeed>();
 
-        instance.World.Query(in queryDescription, (ref TransformComponent transform, ref SpinnerComponent spinner) =>
+        world.ParallelQuery(in query, (ref Name name, ref LocalTransform localTransform, ref RotationSpeed rotationSpeed) =>
         {
-            var rotationDelta = spinner.RotationSpeed.ToQuaternion(); 
-            transform.Rotation = Quaternion.Normalize(transform.Rotation * rotationDelta);
+            rotationSpeed.value.Y = 0.1f;
+            Quaternion rotationQuaternion = rotationSpeed.value.ToQuaternion();
+            Matrix4x4 rotationMatrix = Matrix4x4.CreateFromQuaternion(rotationQuaternion);
+            localTransform.value = Matrix4x4.Multiply(localTransform.value, rotationMatrix);
             
-            /*
-            Console.WriteLine($"Transform.Rotation: {transform.Rotation}");
-                
-            float magnitude = MathF.Sqrt(transform.Rotation.X * transform.Rotation.X +
-                                         transform.Rotation.Y * transform.Rotation.Y +
-                                         transform.Rotation.Z * transform.Rotation.Z +
-                                         transform.Rotation.W * transform.Rotation.W);
-            Console.WriteLine($"Quaternion Magnitude: {magnitude}");
-            */
+            Program.Logger?.Log(LogLevel.Info, $"Local transform: {localTransform.value}");
         });
     }
 }

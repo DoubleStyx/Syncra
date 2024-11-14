@@ -1,43 +1,90 @@
+using Syncra.Systems;
+
 namespace Syncra;
 
 public class Engine
 {
-    private List<Instance> Instances = new List<Instance>();
-    private Instance CurrentInstance;
+    private Dictionary<Guid, Instance> Instances { get; }
+    private Guid LocalInstance { get; }
+    private Guid CurrentInstance { get; set; }
 
     public Engine()
     {
-        CreateInstance(defaultInstance: true);
+        Instances = new Dictionary<Guid, Instance>();
+        Instance localInstance = new Instance(localInstance: true);
+        Instances.Add(localInstance.Guid, localInstance);
+        ChangeCurrentInstance(localInstance.Guid);
     }
 
     public void Run()
     {
         while (true)
         {
-            foreach (var instance in Instances)
+            // Arch ECS does not allow running parallelQuery off main thread,
+            // So I'll need to fix that at some point
+            // We need full control over each thread later on
+            foreach (var instance in Instances.Values)
             {
-                instance.Update();
-            }
+                // sleep to meet tick interval
+                if (DateTime.Now - instance.UpdateStartTime < instance.TickInterval)
+                    continue;
+                
+                // throttle secondary instances
+                if (instance.Guid != CurrentInstance &&
+                    DateTime.Now - instance.UpdateStartTime < TimeSpan.FromSeconds(1))
+                    continue;
+                    
+                instance.UpdateStartTime = DateTime.Now;
 
-            Thread.Sleep(100);
+                // process incoming changesets
+
+                // fetch async input buffer
+
+                // run core system 1 in parallel
+                //ParentSystem.Update(this);
+
+                // run user scripts for after1 hook in parallel using updateOrder for passes
+
+                // run core system 2 in parallel
+                SpinnerSystem.Update(instance);
+
+                // run user scripts for after2 hook in parallel using updateOrder for passes
+
+                // etc...
+
+                // push to async render buffer
+
+                // submit changesets
+            }
         }
     }
 
-    private void ChangeCurrentInstance(Instance currentInstance)
+    // we'll have to think about thread safety during instance switching
+    // as well as how the renderer itself manages/shares resources
+    // tbh I don't think we'll keep any GPU resources for non-active
+    // instances loaded
+    private void ChangeCurrentInstance(Guid guid)
     {
-        CurrentInstance = currentInstance;
+        Instance? instance = Instances[guid];
+        if (instance != null)
+            CurrentInstance = Instances[guid].Guid;
     }
 
-    private void CreateInstance(bool defaultInstance = false)
+    private void JoinInstance(Guid guid)
     {
-        Instance instance = new Instance(defaultInstance);
-        Instances.Add(instance);
-        if (defaultInstance)
-            ChangeCurrentInstance(instance);
+        Instance? instance = Instances.TryGetValue(guid, out Instance localInstance) ? localInstance : null;
+        if (instance == null)
+            instance = new Instance();
+        Instances.Add(instance.Guid, instance);
     }
 
-    private void DestroyInstance(Instance instance)
+    // needs to switch to the last used/created instance
+    private void LeaveInstance(Guid guid)
     {
-        Instances.Remove(instance);
+        Instance? instance = Instances[guid];
+        if (instance != null)
+        {
+            Instances.Remove(instance.Guid);
+        }
     }
 }

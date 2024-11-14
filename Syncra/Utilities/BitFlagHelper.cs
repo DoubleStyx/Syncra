@@ -1,6 +1,6 @@
-namespace Syncra.Helpers;
+namespace Syncra.Utilities;
 
-public static class BitFlagHelpers
+public static class BitFlagHelper
 {
     public static bool HasFlag(this byte flags, byte position) => (flags & (1 << position)) > 0;
     public static bool HasFlag(this ushort flags, byte position) => (flags & (1u << position)) > 0;

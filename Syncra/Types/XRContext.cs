@@ -1,7 +1,8 @@
 using System.Runtime.InteropServices;
 
-namespace Syncra.Handles;
+namespace Syncra.Types;
 
+// Better namespace for this?
 public class XRContext
 {
 #if WINDOWS
