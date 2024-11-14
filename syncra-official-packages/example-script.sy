@@ -1,0 +1,56 @@
+# this is where custom components and systems can be defined
+# using SyncraScript, a custom scripting language
+# with a custom language server
+# The syntax will be very similar to Python except with static typing
+
+# Components are declared as statically typed Pythonic structs
+
+comp Player:
+    id: int
+    name: str
+    health: int
+    inventory: List[int]
+
+comp Weapon:
+    id: int
+    name: str
+    damage: int
+    durability: int
+
+comp Enemy:
+    id: int
+    name: str
+    health: int
+    strength: int
+
+comp Potion:
+    id: int
+    name: str
+    healing_amount: int
+
+# Systems are defined as statically-typed Pythonic functions
+
+sys attack_enemy(player: Player, weapon: Weapon, enemy: Enemy):
+    # Check for missing weapons
+    if weapon.id not in player.inventory:
+        return
+
+    # Calculate damage
+    damage = weapon.damage
+    enemy.health -= damage
+    weapon.durability -= 1
+
+    # Remove broken weapons
+    if weapon.durability <= 0:
+        player.inventory.remove(weapon.id)
+
+sys use_potion(player: Player, potion: Potion):
+    # Check for missing potions
+    if potion.id not in player.inventory:
+        return
+
+    # Heal player
+    player.health += potion.healing_amount
+
+    # Remove potion from inventory after use
+    player.inventory.remove(potion.id)
