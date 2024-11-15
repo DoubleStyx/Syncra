@@ -1,0 +1,14 @@
+# SyncraScript example. SyncraScript is Pythonic but uses static typing. It is graph-code isomorphic and gets compiled
+# to native-executable instructions that are executed in a sandbox/VM.
+
+# Input binding definitions
+
+# Output binding definitions
+
+# Component definitions
+
+# System definitions
+
+# Function definitions
+
+# Asset/resource definitions
