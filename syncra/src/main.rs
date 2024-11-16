@@ -1,8 +1,11 @@
 use winit::event_loop::{ControlFlow, EventLoop};
-use crate::window::App;
+use crate::app::App;
 
-mod window;
+mod app;
 mod renderer;
+mod state;
+mod components;
+mod systems;
 
 pub fn main() {
     env_logger::init();

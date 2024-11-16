@@ -5,12 +5,13 @@ use winit::event_loop::{ActiveEventLoop};
 use winit::window::{Window, WindowId};
 use crate::renderer::Renderer;
 use wgpu::hal::DynDevice;
-
+use crate::state::State;
 
 #[derive(Default)]
 pub struct App<'a> {
     window: Option<Arc<Window>>,
     renderer: Option<Renderer<'a>>,
+    state: Option<State>,
 }
 
 impl ApplicationHandler for App<'_> {
@@ -19,12 +20,15 @@ impl ApplicationHandler for App<'_> {
             let window = Arc::new(event_loop.create_window(Window::default_attributes()).unwrap());
             self.window = Some(window.clone());
         }
-        if self.renderer.is_none() {}
-        let renderer = pollster::block_on(Renderer::new(self.window.as_ref().unwrap().clone()));
-        self.renderer = Some(renderer);
-
-
-        self.window.as_mut().unwrap().request_redraw();
+        if self.renderer.is_none() {
+            let renderer = pollster::block_on(Renderer::new(self.window.as_ref().unwrap().clone()));
+            self.renderer = Some(renderer);
+        }
+        if self.state.is_none() {
+            let mut state = State::new();
+            state.add_test_entity(); // temporary
+            self.state = Some(state);
+        }
     }
 
 fn window_event(&mut self, event_loop: &ActiveEventLoop, window_id: WindowId, event: WindowEvent) {
@@ -40,6 +44,7 @@ fn window_event(&mut self, event_loop: &ActiveEventLoop, window_id: WindowId, ev
                 self.renderer.as_mut().unwrap().resize(physical_size);
             },
             WindowEvent::RedrawRequested => {
+                self.state.as_mut().unwrap().update();
                 self.renderer.as_mut().unwrap().render();
                 self.window.as_mut().unwrap().request_redraw();
             },
