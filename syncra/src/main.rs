@@ -6,6 +6,7 @@ mod renderer;
 mod state;
 mod components;
 mod systems;
+mod assets;
 
 pub fn main() {
     env_logger::init();
