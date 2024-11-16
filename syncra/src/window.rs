@@ -10,7 +10,7 @@ use wgpu::hal::DynDevice;
 #[derive(Default)]
 pub struct App<'a> {
     window: Option<Arc<Window>>,
-    state: Option<Renderer<'a>>,
+    renderer: Option<Renderer<'a>>,
 }
 
 impl ApplicationHandler for App<'_> {
@@ -18,14 +18,17 @@ impl ApplicationHandler for App<'_> {
         if self.window.is_none() {
             let window = Arc::new(event_loop.create_window(Window::default_attributes()).unwrap());
             self.window = Some(window.clone());
-
-            let state = pollster::block_on(Renderer::new(window.clone()));
-            self.state = Some(state);
         }
+        if self.renderer.is_none() {}
+        let renderer = pollster::block_on(Renderer::new(self.window.as_ref().unwrap().clone()));
+        self.renderer = Some(renderer);
+
+
+        self.window.as_mut().unwrap().request_redraw();
     }
 
-    fn window_event(&mut self, event_loop: &ActiveEventLoop, id: WindowId, event: WindowEvent) {
-        if id != self.window.as_ref().unwrap().id() {
+fn window_event(&mut self, event_loop: &ActiveEventLoop, window_id: WindowId, event: WindowEvent) {
+        if window_id != self.window.as_ref().unwrap().id() {
             return;
         }
 
@@ -34,10 +37,11 @@ impl ApplicationHandler for App<'_> {
                 event_loop.exit()
             },
             WindowEvent::Resized(physical_size) => {
-                self.state.as_mut().unwrap().resize(physical_size);
+                self.renderer.as_mut().unwrap().resize(physical_size);
             },
             WindowEvent::RedrawRequested => {
-                self.state.as_ref().unwrap().draw();
+                self.renderer.as_mut().unwrap().render();
+                self.window.as_mut().unwrap().request_redraw();
             },
             _ => {},
         }
