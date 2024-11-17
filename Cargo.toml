@@ -1,4 +1,4 @@
 [workspace]
 members = [
-    "syncra-rs",
+    "syncra",
 ]
