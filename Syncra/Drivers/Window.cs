@@ -1,26 +1,36 @@
+using Silk.NET.Maths;
+using Silk.NET.Windowing;
+
 namespace Syncra.Drivers;
 
+/// <summary>
+/// Windowing drivers using GLFW.
+/// </summary>
 public class Window
 {
-    glfwInit();
-
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Vulkan window", nullptr, nullptr);
-
-    uint32_t extensionCount = 0;
-    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
-
-    std::cout << extensionCount << " extensions supported\n";
-
-    glm::mat4 matrix;
-    glm::vec4 vec;
-    auto test = matrix * vec;
-
-        while(!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
+    /// <summary>
+    /// A handle to the active window.
+    /// </summary>
+    private static IWindow _window;
+    
+    /// <summary>
+    /// Creates a new window and maintains a handle to it internally. Start the event loop with Run().
+    /// </summary>
+    public Window()
+    {
+        WindowOptions options = WindowOptions.Default with
+        {
+            Size = new Vector2D<int>(800, 600),
+            Title = "Syncra"
+        };
+        _window = Silk.NET.Windowing.Window.Create(options);
     }
 
-    glfwDestroyWindow(window);
-
-    glfwTerminate();
+    /// <summary>
+    /// This will consume the main thread in theory.
+    /// </summary>
+    public void Run()
+    {
+        _window.Run();
+    }
 }
