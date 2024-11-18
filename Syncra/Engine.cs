@@ -33,7 +33,6 @@ public class Engine
     public void Run()
     {
         /*
-        // run local home in here to keep the main thread busy
         while (true)
         {
             LocalScene.Update();
