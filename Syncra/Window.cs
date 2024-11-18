@@ -1,6 +1,6 @@
 namespace Syncra;
 
-public class Input
+public class Window
 {
     
 }

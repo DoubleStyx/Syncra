@@ -10,4 +10,15 @@
         <InvariantGlobalization>true</InvariantGlobalization>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Silk.NET.OpenAL" Version="2.22.0" />
+      <PackageReference Include="Silk.NET.OpenXR" Version="2.22.0" />
+      <PackageReference Include="Silk.NET.Vulkan" Version="2.22.0" />
+      <PackageReference Include="Silk.NET.Windowing" Version="2.22.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Types\" />
+    </ItemGroup>
+
 </Project>
