@@ -1,6 +1,6 @@
 # Syncra
 
-An ECS-driven highly-parallel game engine with a focus toward networked VR and desktop use cases.
+An ECS-driven, highly-parallel, extremely modular game engine with a focus toward social VR use cases.
 
 View what's being worked on here: https://github.com/users/DoubleStyx/projects/5/views/1
 
