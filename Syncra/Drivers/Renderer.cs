@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using Silk.NET.GLFW;
 using Silk.NET.Vulkan;
 
@@ -9,14 +8,15 @@ namespace Syncra.Drivers;
 /// </summary>
 public class Renderer : IDisposable
 {
-    private Instance _instance;
-    private Glfw _glfw;
-    private Vk _vk;
+    private readonly Instance _instance;
+    private readonly Glfw _glfw;
+    private readonly Vk _vk;
     private readonly byte[] _name = "Syncra"u8.ToArray();
+
     private readonly byte[][] _validationLayers =
-    {
-        "VK_LAYER_KHRONOS_validation"u8.ToArray(),
-    };
+    [
+        "VK_LAYER_KHRONOS_validation"u8.ToArray()
+    ];
 
     /// <summary>
     ///     Initializes the Vulkan renderer.
@@ -25,10 +25,12 @@ public class Renderer : IDisposable
     {
         _glfw = Glfw.GetApi();
         _vk = Vk.GetApi();
+        
         var applicationInfo = new ApplicationInfo
         {
             SType = StructureType.ApplicationInfo
         };
+        
         unsafe
         {
             fixed (byte* pName = _name)
@@ -42,12 +44,14 @@ public class Renderer : IDisposable
         applicationInfo.ApiVersion = 1;
         applicationInfo.EngineVersion = 1;
         var instanceCreateInfo = new InstanceCreateInfo();
+
         unsafe
         {
             instanceCreateInfo.PApplicationInfo = &applicationInfo;
         }
-        
+
         uint glfwExtensionCount = 0;
+        
         unsafe
         {
             var extensionsPtr = _glfw.GetRequiredInstanceExtensions(out glfwExtensionCount);
@@ -56,11 +60,19 @@ public class Renderer : IDisposable
 
         instanceCreateInfo.EnabledExtensionCount = glfwExtensionCount;
         instanceCreateInfo.EnabledLayerCount = (uint)_validationLayers.Length;
+
         unsafe
         {
-            fixed (byte** pValidationLayers = _validationLayers)
+            var validationLayerPointers = new byte*[_validationLayers.Length];
+            for (var i = 0; i < _validationLayers.Length; i++)
+                fixed (byte* pLayerName = _validationLayers[i])
+                {
+                    validationLayerPointers[i] = pLayerName;
+                }
+
+            fixed (byte** pValidationLayers = validationLayerPointers)
             {
-                instanceCreateInfo.PpEnabledLayerNames = _validationLayers;
+                instanceCreateInfo.PpEnabledLayerNames = pValidationLayers;
             }
         }
 
@@ -69,6 +81,28 @@ public class Renderer : IDisposable
             if (_vk.CreateInstance(&instanceCreateInfo, null, out _instance) != Result.Success)
                 throw new Exception("Failed to create Vulkan instance.");
         }
+        
+        uint physicalDeviceCount = 0;
+        
+        unsafe
+        {
+            _vk.EnumeratePhysicalDevices(_instance, &physicalDeviceCount, null);
+        }
+
+        if (physicalDeviceCount == 0) throw new Exception("Failed to find GPUs with Vulkan support.");
+        var physicalDevices = new PhysicalDevice[physicalDeviceCount];
+        
+        unsafe
+        {
+            fixed (PhysicalDevice* pPhysicalDevices = physicalDevices)
+            {
+                _vk.EnumeratePhysicalDevices(_instance, &physicalDeviceCount, pPhysicalDevices);
+            }
+        }
+
+        var physicalDevice = physicalDevices[0];
+        
+        
     }
 
     /// <summary>
@@ -79,10 +113,16 @@ public class Renderer : IDisposable
     }
 
     /// <summary>
-    /// Disposes the Vulkan instance.
+    ///     Disposes the Vulkan instance.
     /// </summary>
     public void Dispose()
     {
+        if (_instance.Handle != IntPtr.Zero)
+            unsafe
+            {
+                _vk.DestroyInstance(_instance, null);
+            }
+
         _vk.Dispose();
     }
 }
