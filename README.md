@@ -27,7 +27,8 @@ A Discord server is available for the project: https://discord.gg/zSQXwKVPm5
 - System parallelization/multithreading
 - System dependency resolution
 - Asynchronous input/XR, state, and output/renderer management
-- World management
+- World and scene management
+- Multiple scenes per world
 - Automatic overridable state synchronization across the network
 - Tiered read/write permissions manager per-entity
 - Provided XR/windowing and renderer/audio drivers
