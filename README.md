@@ -13,6 +13,7 @@ A Discord server is available for the project: https://discord.gg/zSQXwKVPm5
 - Scripting system
 - Optional official standard and core libraries
 - Official implementations for animation, physics, particles, and more
+- Official implementations for XR and windowing
 - Official renderer implementation with PBR, hardware-accelerated path tracing, lightmapping, light probes, and more 
 - Scriptable input/output bindings
 - Scriptable components and systems
@@ -31,7 +32,6 @@ A Discord server is available for the project: https://discord.gg/zSQXwKVPm5
 - Multiple scenes per world
 - Automatic overridable state synchronization across the network
 - Tiered read/write permissions manager per-entity
-- Provided XR/windowing and renderer/audio drivers
 - Non-networked privileged local space 
 - Official and community package repositories
 - Server/host-client and decentralized network topologies
@@ -42,3 +42,4 @@ A Discord server is available for the project: https://discord.gg/zSQXwKVPm5
 - Migration tools for existing content
 - Multi-world loading and switching support
 - Unfocused world throttling
+- Execution timeouts/cooldowns/validation for user-generated scripts/shaders

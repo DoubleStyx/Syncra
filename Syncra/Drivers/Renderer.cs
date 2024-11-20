@@ -91,7 +91,6 @@ public class Renderer : IDisposable
 
         if (physicalDeviceCount == 0) throw new Exception("Failed to find GPUs with Vulkan support.");
         var physicalDevices = new PhysicalDevice[physicalDeviceCount];
-        
         unsafe
         {
             fixed (PhysicalDevice* pPhysicalDevices = physicalDevices)
@@ -101,6 +100,13 @@ public class Renderer : IDisposable
         }
 
         var physicalDevice = physicalDevices[0];
+
+        var deviceQueueCreateInfo = new DeviceQueueCreateInfo();
+        deviceQueueCreateInfo.QueueFamilyIndex = 0;
+        
+        var deviceCreateInfo = new DeviceCreateInfo();
+        
+        
         
         
     }

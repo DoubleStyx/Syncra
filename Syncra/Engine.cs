@@ -32,15 +32,12 @@ public class Engine
     /// </summary>
     public void Run()
     {
-        /*
         while (true)
         {
             LocalScene.Update();
-            Thread.Sleep(100);
         }
-        */
 
-        Window window = new Window();
-        window.Run();
+        //Window window = new Window();
+        //window.Run();
     }
 }

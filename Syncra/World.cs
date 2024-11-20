@@ -14,12 +14,6 @@ public class World
     /// The currently focused scene. Used to determine thread priority and which scene to render.
     /// </summary>
     public Guid CurrentScene;
-    
-    /// <summary>
-    /// The Task representing the world update loop.
-    /// Though this might get replaced with each scene having its own loop.
-    /// </summary>
-    public Task WorldTask;
 
     /// <summary>
     /// Creates a new World instance.
