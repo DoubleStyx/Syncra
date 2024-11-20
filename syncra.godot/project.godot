@@ -17,3 +17,8 @@ config/icon="res://icon.svg"
 [dotnet]
 
 project/assembly_name="Syncra.Godot"
+
+[xr]
+
+openxr/enabled=true
+shaders/enabled=true
