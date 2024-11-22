@@ -2,7 +2,8 @@ namespace SyncraEngine;
 
 public interface ISystem
 {
-    public List<ISystem> Dependencies { get; }
+    public List<Type> Dependencies { get; }
+    public List<Type> Signature { get; }
 
     public void Update(Scene scene)
     {

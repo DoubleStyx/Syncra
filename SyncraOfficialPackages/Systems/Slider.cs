@@ -5,7 +5,8 @@ namespace SyncraOfficialPackages.Systems;
 
 public class Slider : ISystem
 {
-    public List<ISystem> Dependencies { get; } = new();
+    public List<Type> Dependencies { get; } = new();
+    public List<Type> Signature { get; }
 
     public void Update(Scene scene, Guid entity, ref Components.Transform transform, ref Components.Slider slider)
     {

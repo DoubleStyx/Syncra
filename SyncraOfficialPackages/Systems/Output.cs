@@ -4,5 +4,6 @@ namespace SyncraOfficialPackages.Systems;
 
 public class Output : ISystem
 {
-    public List<ISystem> Dependencies { get; } = new();
+    public List<Type> Dependencies { get; } = new();
+    public List<Type> Signature { get; }
 }

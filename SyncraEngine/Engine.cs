@@ -6,6 +6,6 @@ public sealed class Engine
 
     public List<World> Worlds =
     [
-        new World()
+        new()
     ];
 }

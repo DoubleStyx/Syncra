@@ -2,6 +2,4 @@ using SyncraEngine;
 
 namespace SyncraOfficialPackages.Drivers;
 
-public abstract class Xr : IDriver
-{
-}
+public abstract class Xr : IDriver;

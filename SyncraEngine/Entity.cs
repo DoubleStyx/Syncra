@@ -1,5 +1,3 @@
-using System.Collections.Concurrent;
-
 namespace SyncraEngine;
 
 public struct Entity
