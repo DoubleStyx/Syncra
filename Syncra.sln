@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncraEngine", "SyncraEngine\SyncraEngine.csproj", "{DACE4DE3-B367-4976-A581-EC36AF3A5E19}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncraOfficialPackages", "SyncraOfficialPackages\SyncraOfficialPackages.csproj", "{831F6481-AD95-429E-98DC-05E75F784B4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syncra", "Syncra\Syncra.csproj", "{8A8B76D6-19F1-4F10-8DEB-85B40C948166}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SynFlow", "SynFlow\SynFlow.csproj", "{D989CD23-A231-42AC-9886-0373E63F0276}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,17 +16,13 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DACE4DE3-B367-4976-A581-EC36AF3A5E19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DACE4DE3-B367-4976-A581-EC36AF3A5E19}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DACE4DE3-B367-4976-A581-EC36AF3A5E19}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DACE4DE3-B367-4976-A581-EC36AF3A5E19}.Release|Any CPU.Build.0 = Release|Any CPU
 		{831F6481-AD95-429E-98DC-05E75F784B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{831F6481-AD95-429E-98DC-05E75F784B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{831F6481-AD95-429E-98DC-05E75F784B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{831F6481-AD95-429E-98DC-05E75F784B4E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8A8B76D6-19F1-4F10-8DEB-85B40C948166}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A8B76D6-19F1-4F10-8DEB-85B40C948166}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A8B76D6-19F1-4F10-8DEB-85B40C948166}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A8B76D6-19F1-4F10-8DEB-85B40C948166}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D989CD23-A231-42AC-9886-0373E63F0276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D989CD23-A231-42AC-9886-0373E63F0276}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D989CD23-A231-42AC-9886-0373E63F0276}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D989CD23-A231-42AC-9886-0373E63F0276}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
