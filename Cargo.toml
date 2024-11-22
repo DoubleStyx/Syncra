@@ -1,0 +1,10 @@
+[workspace]
+
+members = [
+    "syncra",
+    "syncra-audio",
+    "syncra-input",
+    "syncra-openxr",
+    "syncra-renderer",
+    "syncra-windowing"
+]
