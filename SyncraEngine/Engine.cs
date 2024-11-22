@@ -1,16 +1,11 @@
 namespace SyncraEngine;
 
-internal sealed class Engine
+public sealed class Engine
 {
-    public List<IDriver> Drivers;
-    public List<World> Worlds;
+    public List<IDriver> Drivers = [];
 
-    internal Engine()
-    {
-        Drivers = [];
-        Worlds =
-        [
-            new World()
-        ];
-    }
+    public List<World> Worlds =
+    [
+        new World()
+    ];
 }

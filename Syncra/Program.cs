@@ -1,4 +1,6 @@
-﻿namespace SyncraEngine;
+﻿using SyncraEngine;
+
+namespace Syncra;
 
 file static class Program
 {

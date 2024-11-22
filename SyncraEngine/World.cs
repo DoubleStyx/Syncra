@@ -1,6 +1,6 @@
 namespace SyncraEngine;
 
-internal sealed class World
+public sealed class World
 {
     private readonly List<Scene> _scenes =
     [
