@@ -2,6 +2,8 @@ namespace SyncraEngine;
 
 public class World
 {
+    public string Name;
+    public Guid Guid;
     public List<Scene> Scenes;
 
     public World()

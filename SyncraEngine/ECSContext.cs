@@ -16,15 +16,37 @@ public class ECSContext
         components.Add(entity, new T());
     }
 
-    public T GetComponent<T>(Guid entity)
+    public T GetComponent<T>(Guid entity) where T : IComponent, new()
     {
         Components.TryGetValue(typeof(T), out var components);
-        components ??= new Dictionary<Guid, IComponent>();
-        return components[entity];
+
+        if (components == null)
+        {
+            return new T();
+        }
+
+        if (components.TryGetValue(entity, out var component))
+        {
+            return (T)component;
+        }
+
+        return new T();
     }
 
-    public void DestroyComponent(Guid entity, IComponent component)
+
+    public void DestroyComponent<T>(Guid entity) where T : IComponent, new()
     {
-        
+        Components.TryGetValue(typeof(T), out var components);
+
+        if (components == null)
+        {
+            return;
+        }
+
+        if (components.TryGetValue(entity, out var component))
+        {
+            components.Remove(entity);
+            return;
+        }
     }
 }
