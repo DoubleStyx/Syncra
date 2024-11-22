@@ -4,30 +4,47 @@ namespace SyncraEngine;
 
 public sealed class EcsContext
 {
-    public readonly ConcurrentDictionary<Type, ConcurrentDictionary<Guid, IComponent>> Components;
+    private readonly ConcurrentDictionary<Type, ConcurrentDictionary<Guid, IComponent>> _components;
 
     internal EcsContext()
     {
-        Components = new ConcurrentDictionary<Type, ConcurrentDictionary<Guid, IComponent>>();
+        _components = new ConcurrentDictionary<Type, ConcurrentDictionary<Guid, IComponent>>();
     }
 
-    public void AddComponent<T>(Entity entity) where T : IComponent, new()
+    public Entity CreateEntity()
     {
-        var components = Components.GetOrAdd(typeof(T), static _ => new ConcurrentDictionary<Guid, IComponent>());
+        return new Entity(this);
+    }
+
+    public IEnumerable<(Guid Entity, T Component)> GetAllComponents<T>() where T : IComponent
+    {
+        if (!_components.TryGetValue(typeof(T), out var components)) yield break;
+
+        foreach (var kvp in components)
+            yield return (kvp.Key, (T)kvp.Value);
+    }
+
+    internal void AddComponent<T>(Entity entity) where T : IComponent, new()
+    {
+        var components = _components.GetOrAdd(typeof(T), static _ => new ConcurrentDictionary<Guid, IComponent>());
         components[entity.Guid] = new T();
     }
 
-    public T? GetComponent<T>(Entity entity) where T : IComponent
+    internal bool TryGetComponent<T>(Entity entity, out T? component) where T : IComponent
     {
-        if (Components.TryGetValue(typeof(T), out var components) 
-            && components.TryGetValue(entity.Guid, out var component)) 
-            return (T)component;
+        if (_components.TryGetValue(typeof(T), out var components) &&
+            components.TryGetValue(entity.Guid, out var comp))
+        {
+            component = (T)comp;
+            return true;
+        }
 
-        return default;
+        component = default;
+        return false;
     }
 
-    public void DestroyComponent<T>(Entity entity) where T : IComponent
+    internal void DestroyComponent<T>(Entity entity) where T : IComponent
     {
-        if (Components.TryGetValue(typeof(T), out var components)) components.TryRemove(entity.Guid, out _);
+        if (_components.TryGetValue(typeof(T), out var components)) components.TryRemove(entity.Guid, out _);
     }
 }
