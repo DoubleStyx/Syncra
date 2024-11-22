@@ -1,17 +1,17 @@
 namespace SyncraEngine;
 
-public class Scene
+public sealed class Scene
 {
-    public string Name;
+    public EcsContext Context;
     public Guid Guid;
-    public ECSContext Context;
     public JobSystem JobSystem;
+    public string Name;
 
-    public Scene()
+    internal Scene()
     {
-        // ECS context
-        Context = new ECSContext();
-        // Job system
+        Name = "";
+        Guid = new Guid();
+        Context = new EcsContext();
         JobSystem = new JobSystem();
     }
 }

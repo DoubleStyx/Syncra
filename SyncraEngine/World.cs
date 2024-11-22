@@ -1,16 +1,12 @@
 namespace SyncraEngine;
 
-public class World
+internal sealed class World
 {
-    public string Name;
-    public Guid Guid;
-    public List<Scene> Scenes;
+    private readonly List<Scene> _scenes =
+    [
+        new()
+    ];
 
-    public World()
-    {
-        // Scene container
-        Scenes = new List<Scene>();
-        // Add default scene
-        Scenes.Add(new Scene());
-    }
+    public Guid Guid = new();
+    public string Name = "";
 }

@@ -1,12 +1,9 @@
-namespace SyncraEngine;
+using SyncraEngine;
 
-public class Renderer
+namespace SyncraOfficialPackages.Drivers;
+
+public class Renderer(Window window, Xr xr) : IDriver
 {
-    public Window Window;
-    public XR Xr;
-    public Renderer(Window window, XR xr)
-    {
-        Window = window;
-        Xr = xr;
-    }
+    public Window Window = window;
+    public Xr Xr = xr;
 }
