@@ -401,3 +401,5 @@ FodyWeavers.xsd
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
 # ================================ End of JetBrains .gitignore Template ================================
+
+.idea/
