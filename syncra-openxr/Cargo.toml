@@ -5,3 +5,6 @@ edition = "2021"
 
 [dependencies]
 openxr = "0.19"
+
+[lib]
+crate-type = ["cdylib, rlib"]
