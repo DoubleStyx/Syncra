@@ -1,4 +1,4 @@
-namespace Syncra.Engine;
+namespace Syncra.SyncraEngine;
 
 public interface IComponent
 {

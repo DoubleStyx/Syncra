@@ -4,7 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>Syncra.Engine</RootNamespace>
+        <RootNamespace>Syncra.SyncraEngine</RootNamespace>
     </PropertyGroup>
 
 </Project>

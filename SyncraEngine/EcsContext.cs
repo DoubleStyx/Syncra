@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 
 #endregion
 
-namespace Syncra.Engine;
+namespace Syncra.SyncraEngine;
 
 public sealed class EcsContext
 {

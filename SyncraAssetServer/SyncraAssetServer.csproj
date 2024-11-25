@@ -4,11 +4,11 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>Syncra.AssetServer</RootNamespace>
+        <RootNamespace>Syncra.SyncraAssetServer</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Engine\Engine.csproj"/>
+        <ProjectReference Include="..\SyncraEngine\SyncraEngine.csproj"/>
     </ItemGroup>
 
 </Project>

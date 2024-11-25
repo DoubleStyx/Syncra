@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficialPackages", "OfficialPackages\OfficialPackages.csproj", "{831F6481-AD95-429E-98DC-05E75F784B4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncraAssetServer", "SyncraAssetServer\SyncraAssetServer.csproj", "{57426FB0-66AC-4245-98B3-0FBC57E8EE3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csproj", "{D989CD23-A231-42AC-9886-0373E63F0276}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncraEngine", "SyncraEngine\SyncraEngine.csproj", "{DCCEEFFB-364A-499A-9633-E5E29A3525B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetServer", "AssetServer\AssetServer.csproj", "{69BEA92B-31D1-43A4-A8E3-E50B49B65B38}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetServer", "SyncraAssetServer\AssetServer.csproj", "{1E0CDE4D-88AB-4DBC-8A57-E06A38DF3C5B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncraOfficialPackages", "SyncraOfficialPackages\SyncraOfficialPackages.csproj", "{45846BCB-173A-416F-94ED-CEC33AF31441}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,21 +18,17 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{831F6481-AD95-429E-98DC-05E75F784B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{831F6481-AD95-429E-98DC-05E75F784B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{831F6481-AD95-429E-98DC-05E75F784B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{831F6481-AD95-429E-98DC-05E75F784B4E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D989CD23-A231-42AC-9886-0373E63F0276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D989CD23-A231-42AC-9886-0373E63F0276}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D989CD23-A231-42AC-9886-0373E63F0276}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D989CD23-A231-42AC-9886-0373E63F0276}.Release|Any CPU.Build.0 = Release|Any CPU
-		{69BEA92B-31D1-43A4-A8E3-E50B49B65B38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69BEA92B-31D1-43A4-A8E3-E50B49B65B38}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69BEA92B-31D1-43A4-A8E3-E50B49B65B38}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69BEA92B-31D1-43A4-A8E3-E50B49B65B38}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1E0CDE4D-88AB-4DBC-8A57-E06A38DF3C5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E0CDE4D-88AB-4DBC-8A57-E06A38DF3C5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1E0CDE4D-88AB-4DBC-8A57-E06A38DF3C5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1E0CDE4D-88AB-4DBC-8A57-E06A38DF3C5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57426FB0-66AC-4245-98B3-0FBC57E8EE3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57426FB0-66AC-4245-98B3-0FBC57E8EE3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57426FB0-66AC-4245-98B3-0FBC57E8EE3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57426FB0-66AC-4245-98B3-0FBC57E8EE3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCCEEFFB-364A-499A-9633-E5E29A3525B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCCEEFFB-364A-499A-9633-E5E29A3525B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCCEEFFB-364A-499A-9633-E5E29A3525B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCCEEFFB-364A-499A-9633-E5E29A3525B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45846BCB-173A-416F-94ED-CEC33AF31441}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45846BCB-173A-416F-94ED-CEC33AF31441}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45846BCB-173A-416F-94ED-CEC33AF31441}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45846BCB-173A-416F-94ED-CEC33AF31441}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
