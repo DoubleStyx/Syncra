@@ -5,7 +5,7 @@ use wgpu::util::{BufferInitDescriptor, DeviceExt};
 use crate::create_render_pipeline;
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
+#[derive(Debug, Clone, Copy)]
 pub struct PositionColor {
     position: [f32; 3],
     color: [f32; 3],

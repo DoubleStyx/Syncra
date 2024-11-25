@@ -2,7 +2,8 @@ namespace Syncra.SyncraEngine;
 
 public sealed class Engine
 {
-	public List<IDriver> Drivers = [];
+	public Guid Guid = new();
+	public string Name = "";
 
 	public List<World> Worlds =
 	[

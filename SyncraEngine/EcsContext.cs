@@ -20,7 +20,7 @@ public sealed class EcsContext
 		return new Entity(this);
 	}
 
-	public IEnumerable<(Guid Entity, T Component)> GetAllComponents<T>() where T : IComponent
+	public IEnumerable<(Guid Entity, T Component)> GetAllComponents<T>() where T : ISystem
 	{
 		if (!_components.TryGetValue(typeof(T), out var components)) yield break;
 

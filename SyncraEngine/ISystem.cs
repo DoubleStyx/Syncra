@@ -2,10 +2,7 @@ namespace Syncra.SyncraEngine;
 
 public interface ISystem
 {
-	public List<Type> Dependencies { get; }
-	public List<Type> Signature { get; }
-
-	public void Update(Scene scene)
-	{
-	}
+    public List<Type> Dependencies { get; set; }
+    public void Start();
+    public void Update();
 }

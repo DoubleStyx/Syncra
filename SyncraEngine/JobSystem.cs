@@ -98,7 +98,7 @@ public sealed class JobSystem
 
 		var options = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
 		foreach (var batch in sortedSystems)
-			await Task.Run(() => { Parallel.ForEach(batch, options, system => { system.Update(scene); }); });
+			await Task.Run(() => { Parallel.ForEach(batch, options, system => { system.Update(); }); });
 		// TODO: switch to parallel/foreach
 		// TODO: efficient querying through smallest intersections first
 		// TODO: caching and other optimizations?

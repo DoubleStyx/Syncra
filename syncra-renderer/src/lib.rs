@@ -9,12 +9,14 @@ use winit::{
 };
 use std::mem::size_of;
 use bytemuck::{Pod, Zeroable};
+use wgpu::util::DeviceExt;
 
 mod camera;
 mod hdr;
 mod model;
 mod resources;
 mod texture;
+mod debug;
 
 use model::{DrawLight, DrawModel, Vertex};
 
@@ -70,7 +72,7 @@ impl Instance {
 }
 
 #[repr(C)]
-#[derive(Debug, Copy, Clone, bytemuck::Pod, bytemuck::Zeroable)]
+#[derive(Debug, Copy, Clone)]
 #[allow(dead_code)]
 struct InstanceRaw {
     model: [[f32; 4]; 4],
@@ -125,7 +127,7 @@ impl model::Vertex for InstanceRaw {
 }
 
 #[repr(C)]
-#[derive(Debug, Copy, Clone, bytemuck::Pod, bytemuck::Zeroable)]
+#[derive(Debug, Copy, Clone)]
 struct LightUniform {
     position: [f32; 3],
     _padding: u32,
@@ -178,13 +180,13 @@ fn create_render_pipeline(
         layout: Some(layout),
         vertex: wgpu::VertexState {
             module: &shader,
-            entry_point: "vs_main",
+            entry_point: Some("vs_main"),
             buffers: vertex_layouts,
             compilation_options: Default::default(),
         },
         fragment: Some(wgpu::FragmentState {
             module: &shader,
-            entry_point: "fs_main",
+            entry_point: Some("fs_main"),
             targets: &[Some(wgpu::ColorTargetState {
                 format: color_format,
                 blend: None,
@@ -538,8 +540,8 @@ impl<'a> State<'a> {
         };
 
         let debug_material = {
-            let diffuse_bytes = include_bytes!("../res/cobble-diffuse.png");
-            let normal_bytes = include_bytes!("../res/cobble-normal.png");
+            // let diffuse_bytes = include_bytes!("../res/cobble-diffuse.png");
+            // let normal_bytes = include_bytes!("../res/cobble-normal.png");
 
             let diffuse_texture = texture::Texture::from_bytes(
                 &device,
@@ -737,69 +739,4 @@ impl<'a> State<'a> {
 
         Ok(())
     }
-}
-
-pub async fn run() {
-    cfg_if::cfg_if! {
-        if #[cfg(target_arch = "wasm32")] {
-        } else {
-            env_logger::init();
-        }
-    }
-
-    let event_loop = EventLoop::new().unwrap();
-    let title = env!("CARGO_PKG_NAME");
-    let window = winit::window::WindowBuilder::new()
-        .with_title(title)
-        .build(&event_loop)
-        .unwrap();
-
-    let mut state = State::new(&window).await.unwrap();
-    let mut last_render_time = instant::Instant::now();
-    event_loop.run(move |event, control_flow| {
-        match event {
-            Event::DeviceEvent {
-                event: DeviceEvent::MouseMotion{ delta, },
-                ..
-            } => if state.mouse_pressed {
-                state.camera_controller.process_mouse(delta.0, delta.1)
-            }
-            Event::WindowEvent {
-                ref event,
-                window_id,
-            } if window_id == state.window().id() && !state.input(event) => {
-                match event {
-                    #[cfg(not(target_arch="wasm32"))]
-                    WindowEvent::CloseRequested
-                    | WindowEvent::KeyboardInput {
-                        event:
-                            KeyEvent {
-                                state: ElementState::Pressed,
-                                physical_key: PhysicalKey::Code(KeyCode::Escape),
-                                ..
-                            },
-                        ..
-                    } => control_flow.exit(),
-                    WindowEvent::Resized(physical_size) => {
-                        state.resize(*physical_size);
-                    }
-                    WindowEvent::RedrawRequested => {
-                        state.window().request_redraw();
-                        let now = instant::Instant::now();
-                        let dt = now - last_render_time;
-                        last_render_time = now;
-                        state.update(dt);
-                        match state.render() {
-                            Ok(_) => {}
-                            Err(wgpu::SurfaceError::Lost | wgpu::SurfaceError::Outdated) => state.resize(state.size),
-                            Err(wgpu::SurfaceError::OutOfMemory) => control_flow.exit(),
-                            Err(wgpu::SurfaceError::Timeout) => log::warn!("Surface timeout"),
-                        }
-                    }
-                    _ => {}
-                }
-            }
-            _ => {}
-        }
-    }).unwrap();
 }

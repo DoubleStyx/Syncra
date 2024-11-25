@@ -4,8 +4,8 @@ public sealed class Scene
 {
 	public EcsContext Context;
 	public Guid Guid;
-	public JobSystem JobSystem;
 	public string Name;
+	public JobSystem JobSystem;
 
 	internal Scene()
 	{

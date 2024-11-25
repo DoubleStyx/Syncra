@@ -36,7 +36,7 @@ pub async fn load_binary(file_name: &str) -> anyhow::Result<Vec<u8>> {
 }
 
 pub async fn load_texture(
-    file_name: &str,
+    file_name: &Option<String>,
     is_normal_map: bool,
     device: &wgpu::Device,
     queue: &wgpu::Queue,
