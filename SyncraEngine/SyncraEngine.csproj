@@ -7,4 +7,10 @@
         <RootNamespace>Syncra.SyncraEngine</RootNamespace>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <OutputPath>..\build\</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    </PropertyGroup>
+
 </Project>

@@ -11,4 +11,10 @@
         <ProjectReference Include="..\SyncraEngine\SyncraEngine.csproj"/>
     </ItemGroup>
 
+    <PropertyGroup>
+        <OutputPath>..\build\</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    </PropertyGroup>
+
 </Project>
