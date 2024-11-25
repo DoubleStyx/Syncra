@@ -1,6 +1,6 @@
-use std::ops::Range;
-use bytemuck::{Pod, Zeroable};
 use crate::texture;
+use bytemuck::{Pod, Zeroable};
+use std::ops::Range;
 
 pub trait Vertex {
     fn desc() -> wgpu::VertexBufferLayout<'static>;

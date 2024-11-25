@@ -1,5 +1,5 @@
-use std::mem::size_of;
 use bytemuck::{Pod, Zeroable};
+use std::mem::size_of;
 use wgpu::util::{BufferInitDescriptor, DeviceExt};
 
 use crate::create_render_pipeline;

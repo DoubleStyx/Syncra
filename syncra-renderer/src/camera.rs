@@ -1,7 +1,7 @@
+use bytemuck::{Pod, Zeroable};
 use cgmath::*;
 use std::f32::consts::FRAC_PI_2;
 use std::time::Duration;
-use bytemuck::{Pod, Zeroable};
 use winit::dpi::PhysicalPosition;
 use winit::event::*;
 use winit::keyboard::KeyCode;

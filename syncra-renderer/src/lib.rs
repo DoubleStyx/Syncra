@@ -1,21 +1,21 @@
-use std::{f32::consts::PI, iter};
 use bytemuck::{Pod, Zeroable};
 use cgmath::prelude::*;
+use std::mem::size_of;
+use std::{f32::consts::PI, iter};
+use wgpu::util::DeviceExt;
 use winit::{
     event::*,
     event_loop::EventLoop,
     keyboard::{KeyCode, PhysicalKey},
     window::Window,
 };
-use std::mem::size_of;
-use wgpu::util::DeviceExt;
 
 mod camera;
+mod debug;
 mod hdr;
 mod model;
 mod resources;
 mod texture;
-mod debug;
 
 use model::{DrawLight, DrawModel, Vertex};
 
@@ -731,7 +731,6 @@ impl<'a> State<'a> {
         }
 
         self.hdr.process(&mut encoder, &view);
-
 
         self.queue.submit(iter::once(encoder.finish()));
         output.present();

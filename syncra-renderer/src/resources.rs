@@ -7,7 +7,6 @@ use wgpu::util::DeviceExt;
 
 use crate::{model, texture};
 
-
 pub async fn load_string(file_name: &str) -> anyhow::Result<String> {
     cfg_if! {
         if #[cfg(target_arch = "wasm32")] {
@@ -129,7 +128,7 @@ pub async fn load_model(
 
                 let r = 1.0 / (delta_uv1.x * delta_uv2.y - delta_uv1.y * delta_uv2.x);
                 let tangent = (delta_pos1 * delta_uv2.y - delta_pos2 * delta_uv1.y) * r;
-                
+
                 let bitangent = (delta_pos2 * delta_uv1.x - delta_pos1 * delta_uv2.x) * -r;
 
                 vertices[c[0] as usize].tangent =
@@ -255,7 +254,7 @@ impl HdrLoader {
             let mut pixels = vec![[0.0, 0.0, 0.0, 0.0]; meta.width as usize * meta.height as usize];
             pixels
         };
-        
+
         let src = texture::Texture::create_2d_texture(
             device,
             meta.width,

@@ -17,24 +17,26 @@ impl Window {
     }
 
     pub fn run(event_loop: EventLoop<()>, window: winit::window::Window) {
-        event_loop.run(move |event, control_flow| match event {
-            Event::WindowEvent {
-                ref event,
-                window_id,
-            } if window_id == window.id() => match event {
-                WindowEvent::CloseRequested
-                | WindowEvent::KeyboardInput {
-                    event:
-                    KeyEvent {
-                        state: ElementState::Pressed,
-                        physical_key: PhysicalKey::Code(KeyCode::Escape),
+        event_loop
+            .run(move |event, control_flow| match event {
+                Event::WindowEvent {
+                    ref event,
+                    window_id,
+                } if window_id == window.id() => match event {
+                    WindowEvent::CloseRequested
+                    | WindowEvent::KeyboardInput {
+                        event:
+                            KeyEvent {
+                                state: ElementState::Pressed,
+                                physical_key: PhysicalKey::Code(KeyCode::Escape),
+                                ..
+                            },
                         ..
-                    },
-                    ..
-                } => control_flow.exit(),
+                    } => control_flow.exit(),
+                    _ => {}
+                },
                 _ => {}
-            },
-            _ => {}
-        }).unwrap();
+            })
+            .unwrap();
     }
 }
