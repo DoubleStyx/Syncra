@@ -51,7 +51,7 @@ impl Texture {
             texture,
             view,
             sampler,
-            size, // NEW!
+            size,
         }
     }
 
@@ -177,7 +177,7 @@ impl Texture {
             texture,
             view,
             sampler,
-            size, // NEW!
+            size,
         }
     }
 }
@@ -204,7 +204,6 @@ impl CubeTexture {
             size: wgpu::Extent3d {
                 width,
                 height,
-                // A cube has 6 sides, so we need 6 layers
                 depth_or_array_layers: 6,
             },
             mip_level_count,

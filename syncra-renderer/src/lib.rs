@@ -1,16 +1,14 @@
 use std::{f32::consts::PI, iter};
 
 use cgmath::prelude::*;
-use wgpu::util::DeviceExt;
 use winit::{
     event::*,
     event_loop::EventLoop,
     keyboard::{KeyCode, PhysicalKey},
     window::Window,
 };
-
-#[cfg(target_arch = "wasm32")]
-use wasm_bindgen::prelude::*;
+use std::mem::size_of;
+use bytemuck::{Pod, Zeroable};
 
 mod camera;
 mod hdr;
@@ -18,35 +16,31 @@ mod model;
 mod resources;
 mod texture;
 
-#[cfg(feature = "debug")]
-mod debug;
-
 use model::{DrawLight, DrawModel, Vertex};
 
 const NUM_INSTANCES_PER_ROW: u32 = 10;
 
 #[repr(C)]
-#[derive(Copy, Clone, bytemuck::Pod, bytemuck::Zeroable)]
+#[derive(Clone, Copy)]
 struct CameraUniform {
     view_position: [f32; 4],
-    view: [[f32; 4]; 4], // NEW!
+    view: [[f32; 4]; 4],
     view_proj: [[f32; 4]; 4],
-    inv_proj: [[f32; 4]; 4], // NEW!
-    inv_view: [[f32; 4]; 4], // NEW!
+    inv_proj: [[f32; 4]; 4],
+    inv_view: [[f32; 4]; 4],
 }
 
 impl CameraUniform {
     fn new() -> Self {
         Self {
             view_position: [0.0; 4],
-            view: cgmath::Matrix4::identity().into(), // NEW!
+            view: cgmath::Matrix4::identity().into(),
             view_proj: cgmath::Matrix4::identity().into(),
-            inv_proj: cgmath::Matrix4::identity().into(), // NEW!
-            inv_view: cgmath::Matrix4::identity().into(), // NEW!
+            inv_proj: cgmath::Matrix4::identity().into(),
+            inv_view: cgmath::Matrix4::identity().into(),
         }
     }
 
-    // UPDATED!
     fn update_view_proj(&mut self, camera: &camera::Camera, projection: &camera::Projection) {
         self.view_position = camera.position.to_homogeneous().into();
         let proj = projection.calc_matrix();
@@ -88,20 +82,13 @@ impl model::Vertex for InstanceRaw {
         use std::mem;
         wgpu::VertexBufferLayout {
             array_stride: mem::size_of::<InstanceRaw>() as wgpu::BufferAddress,
-            // We need to switch from using a step mode of Vertex to Instance
-            // This means that our shaders will only change to use the next
-            // instance when the shader starts processing a new instance
             step_mode: wgpu::VertexStepMode::Instance,
             attributes: &[
                 wgpu::VertexAttribute {
                     offset: 0,
-                    // While our vertex shader only uses locations 0, and 1 now, in later tutorials we'll
-                    // be using 2, 3, and 4, for Vertex. We'll start at slot 5 not conflict with them later
                     shader_location: 5,
                     format: wgpu::VertexFormat::Float32x4,
                 },
-                // A mat4 takes up 4 vertex slots as it is technically 4 vec4s. We need to define a slot
-                // for each vec4. We don't have to do this in code though.
                 wgpu::VertexAttribute {
                     offset: mem::size_of::<[f32; 4]>() as wgpu::BufferAddress,
                     shader_location: 6,
@@ -141,7 +128,6 @@ impl model::Vertex for InstanceRaw {
 #[derive(Debug, Copy, Clone, bytemuck::Pod, bytemuck::Zeroable)]
 struct LightUniform {
     position: [f32; 3],
-    // Due to uniforms requiring 16 byte (4 float) spacing, we need to use a padding field here
     _padding: u32,
     color: [f32; 3],
     _padding2: u32,
@@ -162,7 +148,6 @@ struct State<'a> {
     camera_buffer: wgpu::Buffer,
     camera_bind_group: wgpu::BindGroup,
     instances: Vec<Instance>,
-    #[allow(dead_code)]
     instance_buffer: wgpu::Buffer,
     depth_texture: texture::Texture,
     size: winit::dpi::PhysicalSize<u32>,
@@ -170,15 +155,11 @@ struct State<'a> {
     light_buffer: wgpu::Buffer,
     light_bind_group: wgpu::BindGroup,
     light_render_pipeline: wgpu::RenderPipeline,
-    #[allow(dead_code)]
     debug_material: model::Material,
     mouse_pressed: bool,
-    // NEW!
     hdr: hdr::HdrPipeline,
     environment_bind_group: wgpu::BindGroup,
     sky_pipeline: wgpu::RenderPipeline,
-    #[cfg(feature = "debug")]
-    debug: debug::Debug,
 }
 
 fn create_render_pipeline(
@@ -187,7 +168,7 @@ fn create_render_pipeline(
     color_format: wgpu::TextureFormat,
     depth_format: Option<wgpu::TextureFormat>,
     vertex_layouts: &[wgpu::VertexBufferLayout],
-    topology: wgpu::PrimitiveTopology, // NEW!
+    topology: wgpu::PrimitiveTopology,
     shader: wgpu::ShaderModuleDescriptor,
 ) -> wgpu::RenderPipeline {
     let shader = device.create_shader_module(shader);
@@ -212,21 +193,18 @@ fn create_render_pipeline(
             compilation_options: Default::default(),
         }),
         primitive: wgpu::PrimitiveState {
-            topology, // NEW!
+            topology,
             strip_index_format: None,
             front_face: wgpu::FrontFace::Ccw,
             cull_mode: Some(wgpu::Face::Back),
-            // Setting this to anything other than Fill requires Features::NON_FILL_POLYGON_MODE
             polygon_mode: wgpu::PolygonMode::Fill,
-            // Requires Features::DEPTH_CLIP_CONTROL
             unclipped_depth: false,
-            // Requires Features::CONSERVATIVE_RASTERIZATION
             conservative: false,
         },
         depth_stencil: depth_format.map(|format| wgpu::DepthStencilState {
             format,
             depth_write_enabled: true,
-            depth_compare: wgpu::CompareFunction::LessEqual, // UDPATED!
+            depth_compare: wgpu::CompareFunction::LessEqual,
             stencil: wgpu::StencilState::default(),
             bias: wgpu::DepthBiasState::default(),
         }),
@@ -235,8 +213,6 @@ fn create_render_pipeline(
             mask: !0,
             alpha_to_coverage_enabled: false,
         },
-        // If the pipeline will be used with a multiview render pass, this
-        // indicates how many array layers the attachments will have.
         multiview: None,
         cache: None,
     })
@@ -246,14 +222,8 @@ impl<'a> State<'a> {
     async fn new(window: &'a Window) -> anyhow::Result<State<'a>> {
         let size = window.inner_size();
 
-        // The instance is a handle to our GPU
-        // BackendBit::PRIMARY => Vulkan + Metal + DX12 + Browser WebGPU
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
-            // UPDATED
-            #[cfg(not(target_arch = "wasm32"))]
             backends: wgpu::Backends::PRIMARY,
-            #[cfg(target_arch = "wasm32")]
-            backends: wgpu::Backends::BROWSER_WEBGPU,
             ..Default::default()
         });
 
@@ -271,21 +241,16 @@ impl<'a> State<'a> {
             .request_device(
                 &wgpu::DeviceDescriptor {
                     label: None,
-                    // UPDATED!
                     required_features: wgpu::Features::empty(),
-                    // UPDATED!
                     required_limits: wgpu::Limits::downlevel_defaults(),
                     memory_hints: Default::default(),
                 },
-                None, // Trace path
+                None,
             )
             .await
             .unwrap();
 
         let surface_caps = surface.get_capabilities(&adapter);
-        // Shader code in this tutorial assumes an Srgb surface texture. Using a different
-        // one will result all the colors comming out darker. If you want to support non
-        // Srgb surfaces, you'll need to account for that when drawing to the frame.
         let surface_format = surface_caps
             .formats
             .iter()
@@ -299,7 +264,6 @@ impl<'a> State<'a> {
             height: size.height,
             present_mode: surface_caps.present_modes[0],
             alpha_mode: surface_caps.alpha_modes[0],
-            // NEW!
             view_formats: vec![surface_format.add_srgb_suffix()],
             desired_maximum_frame_latency: 2,
         };
@@ -323,7 +287,6 @@ impl<'a> State<'a> {
                         ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
                         count: None,
                     },
-                    // normal map
                     wgpu::BindGroupLayoutEntry {
                         binding: 2,
                         visibility: wgpu::ShaderStages::FRAGMENT,
@@ -457,7 +420,6 @@ impl<'a> State<'a> {
         let depth_texture =
             texture::Texture::create_depth_texture(&device, &config, "depth_texture");
 
-        // NEW!
         let hdr = hdr::HdrPipeline::new(&device, &config);
 
         let hdr_loader = resources::HdrLoader::new(&device);
@@ -557,7 +519,6 @@ impl<'a> State<'a> {
             )
         };
 
-        // NEW!
         let sky_pipeline = {
             let layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: Some("Sky Pipeline Layout"),
@@ -606,9 +567,6 @@ impl<'a> State<'a> {
             )
         };
 
-        #[cfg(feature = "debug")]
-        let debug = debug::Debug::new(&device, &camera_bind_group_layout, surface_format);
-
         Ok(Self {
             window,
             surface,
@@ -631,16 +589,11 @@ impl<'a> State<'a> {
             light_buffer,
             light_bind_group,
             light_render_pipeline,
-            #[allow(dead_code)]
             debug_material,
             mouse_pressed: false,
-            // NEW!
             hdr,
             environment_bind_group,
             sky_pipeline,
-
-            #[cfg(feature = "debug")]
-            debug,
         })
     }
 
@@ -649,7 +602,6 @@ impl<'a> State<'a> {
     }
 
     fn resize(&mut self, new_size: winit::dpi::PhysicalSize<u32>) {
-        // UPDATED!
         if new_size.width > 0 && new_size.height > 0 {
             self.projection.resize(new_size.width, new_size.height);
             self.hdr
@@ -700,7 +652,6 @@ impl<'a> State<'a> {
             bytemuck::cast_slice(&[self.camera_uniform]),
         );
 
-        // Update the light
         let old_position: cgmath::Vector3<_> = self.light_uniform.position.into();
         self.light_uniform.position = (cgmath::Quaternion::from_axis_angle(
             (0.0, 1.0, 0.0).into(),
@@ -778,28 +729,8 @@ impl<'a> State<'a> {
             render_pass.draw(0..3, 0..1);
         }
 
-        // NEW!
-        // Apply tonemapping
         self.hdr.process(&mut encoder, &view);
 
-        #[cfg(feature = "debug")]
-        {
-            let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                label: Some("Debug"),
-                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    view: &view,
-                    resolve_target: None,
-                    ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Load,
-                        store: wgpu::StoreOp::Store,
-                    },
-                })],
-                depth_stencil_attachment: None,
-                occlusion_query_set: None,
-                timestamp_writes: None,
-            });
-            self.debug.draw_axis(&mut pass, &self.camera_bind_group);
-        }
 
         self.queue.submit(iter::once(encoder.finish()));
         output.present();
@@ -808,12 +739,9 @@ impl<'a> State<'a> {
     }
 }
 
-#[cfg_attr(target_arch = "wasm32", wasm_bindgen(start))]
 pub async fn run() {
     cfg_if::cfg_if! {
         if #[cfg(target_arch = "wasm32")] {
-            std::panic::set_hook(Box::new(console_error_panic_hook::hook));
-            console_log::init_with_level(log::Level::Info).expect("Could't initialize logger");
         } else {
             env_logger::init();
         }
@@ -826,36 +754,16 @@ pub async fn run() {
         .build(&event_loop)
         .unwrap();
 
-    #[cfg(target_arch = "wasm32")]
-    {
-        // Winit prevents sizing with CSS, so we have to set
-        // the size manually when on web.
-        use winit::dpi::PhysicalSize;
-        let _ = window.request_inner_size(PhysicalSize::new(450, 400));
-
-        use winit::platform::web::WindowExtWebSys;
-        web_sys::window()
-            .and_then(|win| win.document())
-            .and_then(|doc| {
-                let dst = doc.get_element_by_id("wasm-example")?;
-                let canvas = web_sys::Element::from(window.canvas()?);
-                dst.append_child(&canvas).ok()?;
-                Some(())
-            })
-            .expect("Couldn't append canvas to document body.");
-    }
-
     let mut state = State::new(&window).await.unwrap();
     let mut last_render_time = instant::Instant::now();
     event_loop.run(move |event, control_flow| {
         match event {
             Event::DeviceEvent {
                 event: DeviceEvent::MouseMotion{ delta, },
-                .. // We're not using device_id currently
+                ..
             } => if state.mouse_pressed {
                 state.camera_controller.process_mouse(delta.0, delta.1)
             }
-            // UPDATED!
             Event::WindowEvent {
                 ref event,
                 window_id,
@@ -875,7 +783,6 @@ pub async fn run() {
                     WindowEvent::Resized(physical_size) => {
                         state.resize(*physical_size);
                     }
-                    // UPDATED!
                     WindowEvent::RedrawRequested => {
                         state.window().request_redraw();
                         let now = instant::Instant::now();
@@ -884,11 +791,8 @@ pub async fn run() {
                         state.update(dt);
                         match state.render() {
                             Ok(_) => {}
-                            // Reconfigure the surface if it's lost or outdated
                             Err(wgpu::SurfaceError::Lost | wgpu::SurfaceError::Outdated) => state.resize(state.size),
-                            // The system is out of memory, we should probably quit
                             Err(wgpu::SurfaceError::OutOfMemory) => control_flow.exit(),
-                            // We're ignoring timeouts
                             Err(wgpu::SurfaceError::Timeout) => log::warn!("Surface timeout"),
                         }
                     }
