@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetServer", "AssetServer\AssetServer.csproj", "{69BEA92B-31D1-43A4-A8E3-E50B49B65B38}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetServer", "SyncraAssetServer\AssetServer.csproj", "{1E0CDE4D-88AB-4DBC-8A57-E06A38DF3C5B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{69BEA92B-31D1-43A4-A8E3-E50B49B65B38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69BEA92B-31D1-43A4-A8E3-E50B49B65B38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69BEA92B-31D1-43A4-A8E3-E50B49B65B38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E0CDE4D-88AB-4DBC-8A57-E06A38DF3C5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E0CDE4D-88AB-4DBC-8A57-E06A38DF3C5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E0CDE4D-88AB-4DBC-8A57-E06A38DF3C5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E0CDE4D-88AB-4DBC-8A57-E06A38DF3C5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
