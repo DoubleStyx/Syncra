@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncraOfficialPackages", "SyncraOfficialPackages\SyncraOfficialPackages.csproj", "{831F6481-AD95-429E-98DC-05E75F784B4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficialPackages", "OfficialPackages\OfficialPackages.csproj", "{831F6481-AD95-429E-98DC-05E75F784B4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncraEngine", "SyncraEngine\SyncraEngine.csproj", "{D989CD23-A231-42AC-9886-0373E63F0276}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csproj", "{D989CD23-A231-42AC-9886-0373E63F0276}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
