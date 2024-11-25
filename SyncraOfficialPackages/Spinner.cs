@@ -1,10 +1,15 @@
+#region
+
 using Syncra.SyncraEngine;
+
+#endregion
 
 namespace Syncra.SyncraOfficialPackages;
 
 public struct Spinner : ISystem
 {
     public List<Type> Dependencies { get; set; }
+
     public void Start()
     {
         throw new NotImplementedException();

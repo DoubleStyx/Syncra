@@ -2,11 +2,11 @@ namespace Syncra.SyncraEngine;
 
 public sealed class World
 {
-	private readonly List<Scene> _scenes =
-	[
-		new()
-	];
+    private readonly List<Scene> _scenes =
+    [
+        new()
+    ];
 
-	public Guid Guid = new();
-	public string Name = "";
+    public Guid Guid = new();
+    public string Name = "";
 }
