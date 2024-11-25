@@ -7,10 +7,10 @@ edition = "2021"
 wgpu = "23.0"
 openxr = "0.19"
 gltf = "1.4"
-winit = "0.29" # winit 0.30 uses a janky workflow
+winit = "0.30"
 pollster = "0.4"
 tokio = "1.41"
-bytemuck = "1.20"
+bytemuck = { version = "1.20", features = [ "derive" ] }
 log = "0.4.22"
 cfg-if = "1.0.0"
 reqwest = "0.12.9"

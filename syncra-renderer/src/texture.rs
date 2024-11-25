@@ -60,18 +60,18 @@ impl Texture {
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         bytes: &[u8],
-        label: &str,
+        label: &Option<String>,
         is_normal_map: bool,
     ) -> Result<Self> {
         let img = image::load_from_memory(bytes)?;
-        Self::from_image(device, queue, &img, Some(label), is_normal_map)
+        Self::from_image(device, queue, &img, label, is_normal_map)
     }
 
     pub fn from_image(
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         img: &image::DynamicImage,
-        label: Option<&str>,
+        label: &Option<String>,
         is_normal_map: bool,
     ) -> Result<Self> {
         let dimensions = img.dimensions();
@@ -124,7 +124,7 @@ impl Texture {
         format: wgpu::TextureFormat,
         usage: wgpu::TextureUsages,
         mag_filter: wgpu::FilterMode,
-        label: Option<&str>,
+        label: &Option<String>,
     ) -> Self {
         let size = wgpu::Extent3d {
             width,
@@ -144,7 +144,7 @@ impl Texture {
 
     pub fn create_texture(
         device: &wgpu::Device,
-        label: Option<&str>,
+        label: &Option<String>,
         size: wgpu::Extent3d,
         format: wgpu::TextureFormat,
         usage: wgpu::TextureUsages,
@@ -152,7 +152,7 @@ impl Texture {
         mag_filter: wgpu::FilterMode,
     ) -> Self {
         let texture = device.create_texture(&wgpu::TextureDescriptor {
-            label,
+            label: label.as_deref(),
             size,
             mip_level_count: 1,
             sample_count: 1,

@@ -1,5 +1,5 @@
 use std::{f32::consts::PI, iter};
-
+use bytemuck::{Pod, Zeroable};
 use cgmath::prelude::*;
 use winit::{
     event::*,
@@ -8,7 +8,6 @@ use winit::{
     window::Window,
 };
 use std::mem::size_of;
-use bytemuck::{Pod, Zeroable};
 use wgpu::util::DeviceExt;
 
 mod camera;
@@ -23,7 +22,7 @@ use model::{DrawLight, DrawModel, Vertex};
 const NUM_INSTANCES_PER_ROW: u32 = 10;
 
 #[repr(C)]
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Pod, Zeroable)]
 struct CameraUniform {
     view_position: [f32; 4],
     view: [[f32; 4]; 4],
@@ -72,7 +71,7 @@ impl Instance {
 }
 
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Pod, Zeroable)]
 #[allow(dead_code)]
 struct InstanceRaw {
     model: [[f32; 4]; 4],
@@ -127,7 +126,7 @@ impl model::Vertex for InstanceRaw {
 }
 
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Pod, Zeroable)]
 struct LightUniform {
     position: [f32; 3],
     _padding: u32,
@@ -425,7 +424,7 @@ impl<'a> State<'a> {
         let hdr = hdr::HdrPipeline::new(&device, &config);
 
         let hdr_loader = resources::HdrLoader::new(&device);
-        let sky_bytes = resources::load_binary("pure-sky.hdr").await?;
+        let sky_bytes = resources::load_binary(&Some("pure-sky.hdr".parse()?)).await?;
         let sky_texture = hdr_loader.from_equirectangular_bytes(
             &device,
             &queue,
@@ -540,22 +539,22 @@ impl<'a> State<'a> {
         };
 
         let debug_material = {
-            // let diffuse_bytes = include_bytes!("../res/cobble-diffuse.png");
-            // let normal_bytes = include_bytes!("../res/cobble-normal.png");
+            let diffuse_bytes: [u8; 4] = [1, 2, 3, 4];
+            let normal_bytes: [u8; 4] = [1, 2, 3, 4];
 
             let diffuse_texture = texture::Texture::from_bytes(
                 &device,
                 &queue,
-                diffuse_bytes,
-                "res/alt-diffuse.png",
+                &diffuse_bytes,
+                &Some("res/alt-diffuse.png".parse()?),
                 false,
             )
             .unwrap();
             let normal_texture = texture::Texture::from_bytes(
                 &device,
                 &queue,
-                normal_bytes,
-                "res/alt-normal.png",
+                &normal_bytes,
+                &Some("res/alt-normal.png".parse()?),
                 true,
             )
             .unwrap();

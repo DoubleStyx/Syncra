@@ -2,6 +2,7 @@ use std::io::{BufReader, Cursor};
 
 use cfg_if::cfg_if;
 use image::codecs::hdr::HdrDecoder;
+use image::ImageDecoder;
 use wgpu::util::DeviceExt;
 
 use crate::{model, texture};
@@ -21,13 +22,13 @@ pub async fn load_string(file_name: &str) -> anyhow::Result<String> {
     Ok(txt)
 }
 
-pub async fn load_binary(file_name: &str) -> anyhow::Result<Vec<u8>> {
+pub async fn load_binary(file_name: &Option<String>) -> anyhow::Result<Vec<u8>> {
     cfg_if! {
         if #[cfg(target_arch = "wasm32")] {
         } else {
             let path = std::path::Path::new("")
                 .join("res")
-                .join(file_name);
+                .join(file_name.as_ref().unwrap());
             let data = std::fs::read(path)?;
         }
     }
@@ -252,13 +253,6 @@ impl HdrLoader {
 
         let pixels = {
             let mut pixels = vec![[0.0, 0.0, 0.0, 0.0]; meta.width as usize * meta.height as usize];
-            hdr_decoder.read_image_transform(
-                |pix| {
-                    let rgb = pix.to_hdr();
-                    [rgb.0[0], rgb.0[1], rgb.0[2], 1.0f32]
-                },
-                &mut pixels[..],
-            )?;
             pixels
         };
         
@@ -269,7 +263,7 @@ impl HdrLoader {
             self.texture_format,
             wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
             wgpu::FilterMode::Linear,
-            None,
+            &None,
         );
 
         queue.write_texture(

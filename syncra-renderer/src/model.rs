@@ -1,5 +1,5 @@
 use std::ops::Range;
-
+use bytemuck::{Pod, Zeroable};
 use crate::texture;
 
 pub trait Vertex {
@@ -7,7 +7,7 @@ pub trait Vertex {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Pod, Zeroable)]
 pub struct ModelVertex {
     pub position: [f32; 3],
     pub tex_coords: [f32; 2],

@@ -1,6 +1,7 @@
 use cgmath::*;
 use std::f32::consts::FRAC_PI_2;
 use std::time::Duration;
+use bytemuck::{Pod, Zeroable};
 use winit::dpi::PhysicalPosition;
 use winit::event::*;
 use winit::keyboard::KeyCode;
@@ -39,6 +40,8 @@ impl Camera {
     }
 }
 
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
 pub struct Projection {
     aspect: f32,
     fovy: Rad<f32>,

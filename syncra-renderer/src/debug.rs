@@ -1,11 +1,11 @@
 use std::mem::size_of;
-
+use bytemuck::{Pod, Zeroable};
 use wgpu::util::{BufferInitDescriptor, DeviceExt};
 
 use crate::create_render_pipeline;
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Pod, Zeroable)]
 pub struct PositionColor {
     position: [f32; 3],
     color: [f32; 3],

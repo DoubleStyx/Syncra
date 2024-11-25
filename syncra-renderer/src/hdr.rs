@@ -26,7 +26,7 @@ impl HdrPipeline {
             format,
             wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::RENDER_ATTACHMENT,
             wgpu::FilterMode::Nearest,
-            Some("Hdr::texture"),
+            &Some("Hdr::texture".parse().unwrap()),
         );
 
         let layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
@@ -102,7 +102,7 @@ impl HdrPipeline {
             wgpu::TextureFormat::Rgba16Float,
             wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::RENDER_ATTACHMENT,
             wgpu::FilterMode::Nearest,
-            Some("Hdr::texture"),
+            &Some("Hdr::texture".parse().unwrap()),
         );
         self.bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
             label: Some("Hdr::bind_group"),

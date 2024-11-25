@@ -11,8 +11,16 @@
         <ProjectReference Include="..\SyncraEngine\SyncraEngine.csproj"/>
     </ItemGroup>
 
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <RustConfiguration>debug</RustConfiguration>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <RustConfiguration>release</RustConfiguration>
+    </PropertyGroup>
+
     <PropertyGroup>
-        <OutputPath>..\build\</OutputPath>
+        <OutputPath>..\target\$(RustConfiguration)</OutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     </PropertyGroup>
