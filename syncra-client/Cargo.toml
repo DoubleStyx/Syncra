@@ -9,3 +9,4 @@ syncra-windowing = { path = "../syncra-windowing" }
 syncra-input = { path = "../syncra-input" }
 syncra-audio = { path = "../syncra-audio" }
 syncra-openxr = { path = "../syncra-openxr" }
+libloading = "0.8.5"
