@@ -4,10 +4,12 @@ public sealed class Engine
 {
     public Guid Guid = new();
     public string Name = "";
-    public World CurrentWorld = new();
+    public World? CurrentWorld = null;
+    public List<World> Worlds = [];
 
-    public List<World> Worlds =
-    [
-        new()
-    ];
+    internal Engine()
+    {
+        CurrentWorld = new World();
+        Worlds.Add(CurrentWorld);
+    }
 }

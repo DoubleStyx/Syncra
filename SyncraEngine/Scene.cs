@@ -9,13 +9,11 @@ namespace Syncra.SyncraEngine;
 public sealed class Scene
 {
     private readonly ConcurrentDictionary<Type, ConcurrentDictionary<Guid, Component>> _components;
-    public Guid Guid;
-    public string Name;
+    public Guid Guid = new Guid();
+    public string Name = "";
 
     internal Scene()
     {
-        Name = "";
-        Guid = new Guid();
         _components = new ConcurrentDictionary<Type, ConcurrentDictionary<Guid, Component>>();
     }
 
