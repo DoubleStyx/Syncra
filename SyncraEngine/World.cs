@@ -9,4 +9,5 @@ public sealed class World
 
     public Guid Guid = new();
     public string Name = "";
+    public Scene CurrentScene;
 }

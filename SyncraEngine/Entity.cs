@@ -3,27 +3,27 @@ namespace Syncra.SyncraEngine;
 public struct Entity
 {
     internal Guid Guid;
-    private readonly EcsContext _context;
+    private readonly Scene _scene;
 
-    internal Entity(EcsContext context)
+    internal Entity(Scene scene)
     {
         Guid = Guid.NewGuid();
-        _context = context;
+        _scene = scene;
     }
 
-    public readonly void AddComponent<T>() where T : IComponent, new()
+    public readonly void AddComponent<T>() where T : Component, new()
     {
-        _context.AddComponent<T>(this);
+        _scene.AddComponent<T>(this);
     }
 
-    public readonly T? TryGetComponent<T>() where T : IComponent
+    public readonly T? TryGetComponent<T>() where T : Component
     {
-        _context.TryGetComponent<T>(this, out var component);
+        _scene.TryGetComponent<T>(this, out var component);
         return component;
     }
 
-    public readonly void DestroyComponent<T>() where T : IComponent
+    public readonly void DestroyComponent<T>() where T : Component
     {
-        _context.DestroyComponent<T>(this);
+        _scene.DestroyComponent<T>(this);
     }
 }
