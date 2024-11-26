@@ -3,6 +3,7 @@
 members = [
     "syncra-client",
     "syncra-server",
+    "syncra-asset-server",
     "syncra-audio",
     "syncra-input",
     "syncra-openxr",
