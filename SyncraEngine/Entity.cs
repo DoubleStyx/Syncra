@@ -2,7 +2,7 @@ namespace Syncra.SyncraEngine;
 
 public struct Entity
 {
-    internal Guid Guid;
+    internal readonly Guid Guid;
     private readonly World _world;
 
     internal Entity(World world)
@@ -11,18 +11,18 @@ public struct Entity
         _world = world;
     }
 
-    public readonly void AddComponent<T>() where T : Component, new()
+    public readonly void AddComponent<T>() where T : IComponent, new()
     {
         _world.AddComponent<T>(this);
     }
 
-    public readonly T? TryGetComponent<T>() where T : Component
+    public readonly T? TryGetComponent<T>() where T : IComponent
     {
         _world.TryGetComponent<T>(this, out var component);
         return component;
     }
 
-    public readonly void DestroyComponent<T>() where T : Component
+    public readonly void DestroyComponent<T>() where T : IComponent
     {
         _world.DestroyComponent<T>(this);
     }
