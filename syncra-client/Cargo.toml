@@ -4,9 +4,3 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-syncra-renderer = { path = "../syncra-renderer" }
-syncra-windowing = { path = "../syncra-windowing" }
-syncra-input = { path = "../syncra-input" }
-syncra-audio = { path = "../syncra-audio" }
-syncra-openxr = { path = "../syncra-openxr" }
-libloading = "0.8.5"

@@ -4,7 +4,4 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-winit = "0.29"
-
-[lib]
-crate-type = ["cdylib"]
+winit = "0.30"

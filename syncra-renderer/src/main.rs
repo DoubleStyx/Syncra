@@ -134,8 +134,7 @@ struct LightUniform {
     _padding2: u32,
 }
 
-struct State<'a> {
-    window: &'a Window,
+pub struct Renderer<'a> {
     surface: wgpu::Surface<'a>,
     device: wgpu::Device,
     queue: wgpu::Queue,
@@ -219,8 +218,8 @@ fn create_render_pipeline(
     })
 }
 
-impl<'a> State<'a> {
-    async fn new(window: &'a Window) -> anyhow::Result<State<'a>> {
+impl<'a> Renderer<'a> {
+    pub async fn new(window: &'a winit::window::Window) -> anyhow::Result<Renderer<'a>> {
         let size = window.inner_size();
 
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
@@ -569,7 +568,6 @@ impl<'a> State<'a> {
         };
 
         Ok(Self {
-            window,
             surface,
             device,
             queue,
@@ -596,10 +594,6 @@ impl<'a> State<'a> {
             environment_bind_group,
             sky_pipeline,
         })
-    }
-
-    pub fn window(&self) -> &Window {
-        &self.window
     }
 
     fn resize(&mut self, new_size: winit::dpi::PhysicalSize<u32>) {

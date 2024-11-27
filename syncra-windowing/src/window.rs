@@ -1,42 +1,31 @@
-use winit::event::{ElementState, Event, KeyEvent, WindowEvent};
-use winit::event_loop::EventLoop;
-use winit::keyboard::{KeyCode, PhysicalKey};
-use winit::window::WindowBuilder;
+use winit::application::ApplicationHandler;
+use winit::event::WindowEvent;
+use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
+use winit::window::{Window, WindowId};
 
-pub struct Window {
-    pub window: winit::window::Window,
+#[derive(Default)]
+pub struct App {
+    window: Option<Window>,
 }
 
-impl Window {
-    pub fn new(event_loop: &EventLoop<()>) -> Window {
-        let window = WindowBuilder::new()
-            .build(event_loop)
-            .expect("Failed to create window");
-
-        Self { window }
+impl ApplicationHandler for App {
+    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
+        self.window = Some(event_loop.create_window(Window::default_attributes()).unwrap());
     }
 
-    pub fn run(event_loop: EventLoop<()>, window: winit::window::Window) {
-        event_loop
-            .run(move |event, control_flow| match event {
-                Event::WindowEvent {
-                    ref event,
-                    window_id,
-                } if window_id == window.id() => match event {
-                    WindowEvent::CloseRequested
-                    | WindowEvent::KeyboardInput {
-                        event:
-                            KeyEvent {
-                                state: ElementState::Pressed,
-                                physical_key: PhysicalKey::Code(KeyCode::Escape),
-                                ..
-                            },
-                        ..
-                    } => control_flow.exit(),
-                    _ => {}
-                },
-                _ => {}
-            })
-            .unwrap();
+    fn window_event(&mut self, event_loop: &ActiveEventLoop, id: WindowId, event: WindowEvent) {
+        match event {
+            WindowEvent::CloseRequested => {
+                println!("The close button was pressed; stopping");
+                event_loop.exit();
+            },
+            WindowEvent::RedrawRequested => {
+                
+                // Draw
+                
+                self.window.as_ref().unwrap().request_redraw();
+            }
+            _ => (),
+        }
     }
 }
