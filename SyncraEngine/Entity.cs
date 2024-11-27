@@ -1,5 +1,6 @@
 namespace Syncra.SyncraEngine;
 
+/// A simple handle to an entity
 public struct Entity
 {
     internal readonly Guid Guid;
