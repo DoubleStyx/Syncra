@@ -1,7 +1,0 @@
-[package]
-name = "syncra-openxr"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-openxr = "0.19"

@@ -1,5 +1,0 @@
-mod input;
-
-fn main() {
-    
-}

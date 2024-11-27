@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncraEngine", "SyncraEngine\SyncraEngine.csproj", "{DCCEEFFB-364A-499A-9633-E5E29A3525B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syncra", "Syncra\Syncra.csproj", "{AA3D911B-EB3A-4E6F-A258-5415B404DDDE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,9 +18,5 @@ Global
 		{DCCEEFFB-364A-499A-9633-E5E29A3525B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCCEEFFB-364A-499A-9633-E5E29A3525B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCCEEFFB-364A-499A-9633-E5E29A3525B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA3D911B-EB3A-4E6F-A258-5415B404DDDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA3D911B-EB3A-4E6F-A258-5415B404DDDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA3D911B-EB3A-4E6F-A258-5415B404DDDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA3D911B-EB3A-4E6F-A258-5415B404DDDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
