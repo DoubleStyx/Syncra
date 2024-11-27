@@ -732,3 +732,7 @@ impl<'a> Renderer<'a> {
         Ok(())
     }
 }
+
+pub fn main() {
+    // todo
+}

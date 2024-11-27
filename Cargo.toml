@@ -2,7 +2,6 @@
 
 members = [
     "syncra-client",
-    "syncra-headless",
     "syncra-audio",
     "syncra-input",
     "syncra-openxr",
