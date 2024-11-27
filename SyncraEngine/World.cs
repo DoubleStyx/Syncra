@@ -10,20 +10,14 @@ public sealed class World
 
     internal World(Guid worldGuid = new Guid(), string ipAddress = null)
     {
-        if (worldGuid != null)
+        if (ipAddress != null)
         {
-            if (ipAddress != null)
+            if (worldGuid != null)
             {
-                // attempt to connect to another user
+                Guid = worldGuid;
+                Name = ""; // placeholder until name resolution
+                _components = new ConcurrentDictionary<Type, ConcurrentDictionary<Guid, Component>>();
             }
-            else
-            {
-                // attempt to load world from asset server
-            }
-        }
-        else
-        {
-            // new world
         }
     }
 

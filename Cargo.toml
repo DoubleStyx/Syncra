@@ -1,7 +1,6 @@
 [workspace]
 
 members = [
-    "syncra-client",
     "syncra-audio",
     "syncra-input",
     "syncra-openxr",
