@@ -7,19 +7,4 @@
         <RootNamespace>Syncra.SyncraEngine</RootNamespace>
         <OutputType>Exe</OutputType>
     </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-        <RustConfiguration>debug</RustConfiguration>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-        <RustConfiguration>release</RustConfiguration>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <OutputPath>..\target\$(RustConfiguration)</OutputPath>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    </PropertyGroup>
-
 </Project>
