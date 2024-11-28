@@ -1,11 +1,22 @@
-[gd_scene load_steps=5 format=3 uid="uid://df2oqa6v0ctm7"]
+[gd_scene load_steps=8 format=3 uid="uid://df2oqa6v0ctm7"]
 
 [ext_resource type="Script" path="res://SyncraEngineRunner.cs" id="1_qkhsr"]
-[ext_resource type="Script" path="res://CharacterController.cs" id="2_kkjlt"]
+[ext_resource type="Script" path="res://Player.cs" id="2_83i55"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_fh2gg"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fw05a"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_yh5na"]
+sky_top_color = Color(0.221498, 0.449431, 0.747479, 1)
+sky_horizon_color = Color(0.626001, 0.412202, 0, 1)
+
+[sub_resource type="Sky" id="Sky_8baqs"]
+sky_material = SubResource("ProceduralSkyMaterial_yh5na")
+
+[sub_resource type="Environment" id="Environment_vqtk6"]
+background_mode = 2
+sky = SubResource("Sky_8baqs")
 
 [node name="Node3D" type="Node3D"]
 
@@ -18,9 +29,12 @@ mesh = SubResource("BoxMesh_fh2gg")
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35475, 0)
-script = ExtResource("2_kkjlt")
+script = ExtResource("2_83i55")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
 shape = SubResource("CapsuleShape3D_fw05a")
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_vqtk6")

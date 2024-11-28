@@ -1,127 +1,33 @@
 using System.Collections.Concurrent;
+using System.Numerics;
 
 namespace Syncra.SyncraEngine;
 
-public sealed class World
+public class World
 {
-    private readonly ConcurrentDictionary<Type, ConcurrentDictionary<Guid, IComponent>> _components;
+    private readonly ConcurrentDictionary<Type, ConcurrentDictionary<Guid, object>> _components = new();
+    private readonly List<object> _systems = new();
+    public float deltaTime;
 
-    internal World()
+    public T AddComponent<T>(Entity entity)
     {
-        _components = new ConcurrentDictionary<Type, ConcurrentDictionary<Guid, IComponent>>();
+        var comp = default(T);
+        _components.GetOrAdd(typeof(T), static _ => new ConcurrentDictionary<Guid, object>()).TryAdd(entity.Guid, comp);
+        return comp;
     }
 
-    private IEnumerable<IComponent> GetAllComponents()
+    public T? GetComponent<T>(Entity entity)
     {
-        foreach (var typeComponents in _components.Values)
-        foreach (var component in typeComponents.Values)
-            yield return component;
+        if (!_components.TryGetValue(typeof(T), out var componentDict)) return default;
+
+        componentDict.TryGetValue(entity.Guid, out var component);
+        return (T?)component;
     }
 
-    public Entity CreateEntity()
+    public void RemoveComponent<T>(Entity entity)
     {
-        return new Entity(this);
-    }
+        if (!_components.TryGetValue(typeof(T), out var componentDict)) return;
 
-    public IEnumerable<(Guid Entity, T Component)> GetAllComponents<T>() where T : IComponent
-    {
-        if (!_components.TryGetValue(typeof(T), out var components)) yield break;
-
-        foreach (var kvp in components)
-            yield return (kvp.Key, (T)kvp.Value);
-    }
-
-    internal void AddComponent<T>(Entity entity) where T : IComponent, new()
-    {
-        var components = _components.GetOrAdd(typeof(T), static _ => new ConcurrentDictionary<Guid, IComponent>());
-        components[entity.Guid] = new T();
-    }
-
-    internal bool TryGetComponent<T>(Entity entity, out T? component) where T : IComponent
-    {
-        if (_components.TryGetValue(typeof(T), out var components) &&
-            components.TryGetValue(entity.Guid, out var comp))
-        {
-            component = (T)comp;
-            return true;
-        }
-
-        component = default;
-        return false;
-    }
-
-    internal void DestroyComponent<T>(Entity entity) where T : IComponent
-    {
-        if (_components.TryGetValue(typeof(T), out var components)) components.TryRemove(entity.Guid, out _);
-    }
-
-    public async Task ExecuteAsync()
-    {
-        var IComponents = World.GetAllComponents().ToList();
-
-        BuildDependencyGraphs(IComponents, out var graph, out var reverseGraph);
-
-        var batches = TopologicalSortIntoBatches(graph, reverseGraph);
-
-        foreach (var batch in batches)
-        {
-            var tasks = batch.Select(IComponent => Task.Run(() => IComponent.Update()));
-            await Task.WhenAll(tasks);
-        }
-    }
-
-    private static void BuildDependencyGraphs(
-        IEnumerable<IComponent> IComponents,
-        out Dictionary<IComponent, List<IComponent>> graph,
-        out Dictionary<IComponent, List<IComponent>> reverseGraph)
-    {
-        graph = new Dictionary<IComponent, List<IComponent>>();
-        reverseGraph = new Dictionary<IComponent, List<IComponent>>();
-
-        var ComponentsSet = new HashSet<IComponent>(IComponents);
-
-        foreach (var IComponent in IComponents)
-        {
-            graph[IComponent] = IComponent.Dependencies;
-            reverseGraph[IComponent] = new List<IComponent>();
-        }
-
-        foreach (var IComponent in IComponents)
-        foreach (var dependency in graph[IComponent])
-            reverseGraph[dependency].Add(IComponent);
-    }
-
-    private static List<List<IComponent>> TopologicalSortIntoBatches(
-        Dictionary<IComponent, List<IComponent>> graph,
-        Dictionary<IComponent, List<IComponent>> reverseGraph)
-    {
-        var inDegree = graph.ToDictionary(static kvp => kvp.Key, static kvp => kvp.Value.Count);
-        var batches = new List<List<IComponent>>();
-        var zeroInDegree = new Queue<IComponent>(inDegree.Where(static kvp => kvp.Value == 0).Select(static kvp => kvp.Key));
-
-        while (zeroInDegree.Count > 0)
-        {
-            var batch = new List<IComponent>();
-            var batchSize = zeroInDegree.Count;
-
-            for (var i = 0; i < batchSize; i++)
-            {
-                var IComponent = zeroInDegree.Dequeue();
-                batch.Add(IComponent);
-
-                foreach (var dependent in reverseGraph[IComponent])
-                {
-                    inDegree[dependent]--;
-                    if (inDegree[dependent] == 0) zeroInDegree.Enqueue(dependent);
-                }
-            }
-
-            batches.Add(batch);
-        }
-
-        if (inDegree.Any(static kvp => kvp.Value > 0))
-            throw new InvalidOperationException("Cycle detected in IComponent dependencies.");
-
-        return batches;
+        componentDict.TryRemove(entity.Guid, out _);
     }
 }

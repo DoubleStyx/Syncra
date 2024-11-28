@@ -1,11 +1,8 @@
-using System.Net;
+namespace Syncra.SyncraEngine;
 
-namespace Syncra.SyncraEngine
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-        }
     }
 }

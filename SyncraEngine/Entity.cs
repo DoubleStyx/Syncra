@@ -1,30 +1,28 @@
 namespace Syncra.SyncraEngine;
 
-/// A simple handle to an entity
-public struct Entity
+public class Entity
 {
-    internal readonly Guid Guid;
-    private readonly World _world;
+    public Guid Guid;
+    public World World;
 
-    internal Entity(World world)
+    public Entity(Guid guid, World world)
     {
-        Guid = Guid.NewGuid();
-        _world = world;
+        Guid = guid;
+        World = world;
     }
 
-    public readonly void AddComponent<T>() where T : IComponent, new()
+    public T AddComponent<T>()
     {
-        _world.AddComponent<T>(this);
+        return World.AddComponent<T>(this);
     }
 
-    public readonly T? TryGetComponent<T>() where T : IComponent
+    public T? GetComponent<T>()
     {
-        _world.TryGetComponent<T>(this, out var component);
-        return component;
+        return World.GetComponent<T>(this);
     }
 
-    public readonly void DestroyComponent<T>() where T : IComponent
+    public void RemoveComponent<T>()
     {
-        _world.DestroyComponent<T>(this);
+        World.RemoveComponent<T>(this);
     }
 }
