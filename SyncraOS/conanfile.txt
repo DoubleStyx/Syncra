@@ -1,0 +1,5 @@
+[requires]
+fmt/10.0.0  # Replace with the library and version you need
+
+[generators]
+cmake
