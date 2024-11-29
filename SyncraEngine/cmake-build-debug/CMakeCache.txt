@@ -198,6 +198,9 @@ Cglm_DIR:PATH=Cglm_DIR-NOTFOUND
 //The directory containing a CMake configuration file for Glfw3.
 Glfw3_DIR:PATH=Glfw3_DIR-NOTFOUND
 
+//The directory containing a CMake configuration file for OpenXR.
+OpenXR_DIR:PATH=/home/doublestyx/.vcpkg-clion/vcpkg/installed/x64-linux/share/OpenXR
+
 //Value Computed by CMake
 SyncraEngine_BINARY_DIR:STATIC=/home/doublestyx/Documents/GitHub/SyncraEngine/SyncraEngine/cmake-build-debug
 
@@ -237,6 +240,9 @@ VCPKG_TRACE_FIND_PACKAGE:BOOL=OFF
 
 //Enables messages from the VCPKG toolchain for debugging purposes.
 VCPKG_VERBOSE:BOOL=OFF
+
+//The directory containing a CMake configuration file for Vulkan.
+Vulkan_DIR:PATH=Vulkan_DIR-NOTFOUND
 
 //Path to a program.
 Vulkan_GLSLANG_VALIDATOR_EXECUTABLE:FILEPATH=/bin/glslangValidator
