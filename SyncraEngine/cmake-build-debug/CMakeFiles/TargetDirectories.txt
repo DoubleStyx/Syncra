@@ -1,3 +1,0 @@
-/home/doublestyx/Documents/GitHub/SyncraEngine/SyncraEngine/cmake-build-debug/CMakeFiles/SyncraEngine.dir
-/home/doublestyx/Documents/GitHub/SyncraEngine/SyncraEngine/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/doublestyx/Documents/GitHub/SyncraEngine/SyncraEngine/cmake-build-debug/CMakeFiles/rebuild_cache.dir

@@ -10,7 +10,7 @@ set(CMAKE_C_STANDARD 23)
 
 add_executable(SyncraEngine main.c)
 
-target_link_libraries(SyncraEngine PRIVATE Vulkan)
-target_link_libraries(SyncraEngine PRIVATE cglm)
+target_link_libraries(SyncraEngine PRIVATE Vulkan::Vulkan)
+target_link_libraries(SyncraEngine PRIVATE cglm) # Or Cglm::Cglm if applicable
 target_link_libraries(SyncraEngine PRIVATE glfw)
-target_link_libraries(SyncraEngine PRIVATE OpenXR)
+target_link_libraries(SyncraEngine PRIVATE OpenXR::OpenXR)
