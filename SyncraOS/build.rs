@@ -1,6 +1,6 @@
 use std::{env, fs, path::PathBuf};
 use bindgen;
-use git2::{Repository, FetchOptions, AutotagOption, build::RepoBuilder, build::CheckoutBuilder, Error as GitError};
+use git2::{FetchOptions, AutotagOption, build::RepoBuilder, build::CheckoutBuilder, Error as GitError};
 
 fn clone_and_checkout(repo_url: &str, repo_dir_path: &PathBuf, version: &str) -> Result<(), GitError> {
     if repo_dir_path.exists() {
@@ -33,6 +33,8 @@ fn main() {
     println!("cargo:rerun-if-env-changed=GLFW_INCLUDE_PATH");
     println!("cargo:rerun-if-env-changed=CGLM_INCLUDE_PATH");
     println!("cargo:rerun-if-env-changed=OPENXR_INCLUDE_PATH");
+
+    println!("cargo:rerun-if-changed=build.rs");
 
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
 
@@ -76,24 +78,22 @@ fn main() {
     ];
 
     for (lib_name, repo_url, version, header_path, env_var, type_allowlist, var_allowlist) in libraries {
-        // Clone repositories into OUT_DIR/repos
         let repo_dir_path = out_path.join("repos").join(format!("{}-{}", lib_name, version));
 
         if let Err(e) = clone_and_checkout(repo_url, &repo_dir_path, version) {
             panic!("Failed to clone or checkout repository {}: {}", repo_url, e);
         }
 
-        // Construct paths
+        println!("cargo:rerun-if-changed={}", repo_dir_path.display());
+
         let include_path = env::var(env_var)
             .unwrap_or_else(|_| repo_dir_path.join("include").to_string_lossy().to_string());
         let header = repo_dir_path.join(header_path);
 
-        // Debug paths
         println!("Using repo directory: {}", repo_dir_path.display());
         println!("Using header path: {}", header.display());
         println!("Using include path: {}", include_path);
 
-        // Generate bindings in OUT_DIR/bindings
         fs::create_dir_all(out_path.join("bindings"))
             .unwrap_or_else(|e| panic!("Failed to create bindings directory: {}", e));
         let bindings_path = out_path.join("bindings").join(format!("{}.rs", lib_name));
@@ -103,7 +103,7 @@ fn main() {
             let bindings = bindgen::Builder::default()
                 .header(header.to_string_lossy())
                 .clang_arg(format!("-I{}", include_path))
-                .blocklist_item("FP_NAN")// workaround for cglm duplicate includes
+                .blocklist_item("FP_NAN") // workaround for cglm duplicate includes
                 .blocklist_item("FP_INFINITE")
                 .blocklist_item("FP_ZERO")
                 .blocklist_item("FP_SUBNORMAL")
@@ -115,7 +115,5 @@ fn main() {
                 .write_to_file(&bindings_path)
                 .unwrap_or_else(|e| panic!("Couldn't write bindings for {}: {}", lib_name, e));
         }
-
-        println!("cargo:rerun-if-changed={}", header.display());
     }
 }

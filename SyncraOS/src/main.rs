@@ -17,7 +17,7 @@ pub mod bindings {
 pub fn main() {
     unsafe {
         let mut properties: bindings::vulkan::VkPhysicalDeviceProperties = std::mem::zeroed();
-        let physical_device: bindings::vulkan::VkPhysicalDevice = std::ptr::null_mut(); // Replace with actual physical device handle
+        let physical_device: bindings::vulkan::VkPhysicalDevice = std::ptr::null_mut();
 
         bindings::vulkan::vkGetPhysicalDeviceProperties(physical_device, &mut properties as *mut _);
 
