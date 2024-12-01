@@ -1,3 +1,6 @@
+use std::ffi::CString;
+use std::ptr;
+
 pub mod bindings {
     pub mod vulkan {
         include!(concat!(env!("OUT_DIR"), "/bindings/vulkan.rs"));
@@ -16,13 +19,45 @@ pub mod bindings {
 
 pub fn main() {
     unsafe {
-        let mut properties: bindings::vulkan::VkPhysicalDeviceProperties = std::mem::zeroed();
-        let physical_device: bindings::vulkan::VkPhysicalDevice = std::ptr::null_mut();
-
-        bindings::vulkan::vkGetPhysicalDeviceProperties(physical_device, &mut properties as *mut _);
-
-        println!("Device Name: {:?}", properties.deviceName);
+        if bindings::glfw::glfwInit() == bindings::glfw::GLFW_FALSE as i32 {
+            eprintln!("Failed to initialize GLFW");
+            return;
+        }
     }
+
+    let window_title = CString::new("Hello GLFW").expect("Failed to create CString");
+    let window = unsafe {
+        bindings::glfw::glfwCreateWindow(
+            640,
+            480,
+            window_title.as_ptr(),
+            ptr::null_mut(),
+            ptr::null_mut(),
+        )
+    };
+
+    if window.is_null() {
+        eprintln!("Failed to create GLFW window");
+        unsafe { bindings::glfw::glfwTerminate(); }
+        return;
+    }
+
+    unsafe { bindings::glfw::glfwMakeContextCurrent(window); }
+
+    unsafe { bindings::glfw::glfwSwapInterval(1); }
+
+    unsafe {
+        while bindings::glfw::glfwWindowShouldClose(window) == bindings::glfw::GLFW_FALSE as i32 {
+            bindings::glfw::glClear(bindings::glfw::GL_COLOR_BUFFER_BIT);
+
+            bindings::glfw::glfwSwapBuffers(window);
+
+            bindings::glfw::glfwPollEvents();
+        }
+    }
+
+    unsafe { bindings::glfw::glfwDestroyWindow(window); }
+    unsafe { bindings::glfw::glfwTerminate(); }
 
     
 

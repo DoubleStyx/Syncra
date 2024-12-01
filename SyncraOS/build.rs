@@ -28,7 +28,11 @@ fn clone_and_checkout(repo_url: &str, repo_dir_path: &PathBuf, version: &str) ->
 }
 
 fn main() {
+    println!("cargo:rustc-link-lib=dylib=glfw");
     println!("cargo:rustc-link-lib=vulkan");
+    println!("cargo:rustc-link-lib=cglm");
+    println!("cargo:rustc-link-lib=openxr_loader");
+    println!("cargo:rustc-link-lib=dylib=GL"); // Use OpenGL temporarily for testing windowing
     println!("cargo:rerun-if-env-changed=VULKAN_INCLUDE_PATH");
     println!("cargo:rerun-if-env-changed=GLFW_INCLUDE_PATH");
     println!("cargo:rerun-if-env-changed=CGLM_INCLUDE_PATH");
