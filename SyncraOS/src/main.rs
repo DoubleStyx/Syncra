@@ -31,31 +31,20 @@ fn main() {
         .collect();
 
     let mut glfw = glfw::init(glfw::fail_on_errors).unwrap();
-    
+
+    glfw.window_hint(glfw::WindowHint::ClientApi(glfw::ClientApiHint::NoApi));
+
     let window_width = 800;
     let window_height = 600;
 
-    let (mut window, events) = glfw.create_window(window_width, window_height, "Hello this is window", glfw::WindowMode::Windowed)
+    let (mut window, events) = glfw.create_window(window_width, window_height, "Syncra", glfw::WindowMode::Windowed)
         .expect("Failed to create GLFW window.");
-
-    window.set_key_polling(true);
-    window.make_current();
-
-    println!(
-        "Display Handle: {:?}, Window Handle: {:?}",
-        window.display_handle().unwrap().as_raw(),
-        window.window_handle().unwrap().as_raw()
-    );
 
     let mut extension_names =
         ash_window::enumerate_required_extensions(window.display_handle().unwrap().as_raw())
             .unwrap()
             .to_vec();
     extension_names.push(debug_utils::NAME.as_ptr());
-
-    for ext in &extension_names {
-        println!("Extension: {:?}", unsafe { ffi::CStr::from_ptr(*ext) });
-    }
 
     let create_flags = if cfg!(any(target_os = "macos", target_os = "ios")) {
         vk::InstanceCreateFlags::ENUMERATE_PORTABILITY_KHR
@@ -220,6 +209,8 @@ fn main() {
         .queue_family_index(queue_family_index as u32);
 
     let pool = unsafe { device.create_command_pool(&pool_create_info, None) }.unwrap();
+
+    window.set_key_polling(true);
 
     while !window.should_close() {
         glfw.poll_events();
