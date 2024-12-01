@@ -24,6 +24,6 @@ The goal here is to do the whole "social VR sandbox" idea properly. A lot of san
 
 There's been a lot of design changes and architectural revisions. There's a bunch of stuff in the commit history, but right now things are being reworked.
 
-The architectural draft should be fairly stable at this point, so the goal at this time is to rework the core ideas using C.
+The architectural draft should be fairly stable at this point, so the goal at this time is to rework the core ideas using Rust.
 
 Lastly, this project is a recent idea of mine. It's only been around for a few weeks, so expect things to be volatile for now.
