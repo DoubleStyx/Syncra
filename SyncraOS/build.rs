@@ -1,133 +1,121 @@
 use std::{env, fs, path::PathBuf};
 use bindgen;
-use git2::{Repository, FetchOptions, AutotagOption, build::RepoBuilder};
+use git2::{Repository, FetchOptions, AutotagOption, build::RepoBuilder, build::CheckoutBuilder, Error as GitError};
+
+fn clone_and_checkout(repo_url: &str, repo_dir_path: &PathBuf, version: &str) -> Result<(), GitError> {
+    if repo_dir_path.exists() {
+        println!("Repository already exists at: {}", repo_dir_path.display());
+        return Ok(());
+    }
+
+    println!("Cloning repository {} into {}...", repo_url, repo_dir_path.display());
+
+    let mut fetch_opts = FetchOptions::new();
+    fetch_opts.download_tags(AutotagOption::All);
+
+    let repo = RepoBuilder::new()
+        .fetch_options(fetch_opts)
+        .clone(repo_url, repo_dir_path)?;
+
+    println!("Repository cloned successfully. Checking out version: {}", version);
+
+    let object = repo.revparse_single(version)?;
+    repo.checkout_tree(&object, Some(&mut CheckoutBuilder::new()))?;
+    repo.set_head_detached(object.id())?;
+
+    println!("Checked out version: {}", version);
+    Ok(())
+}
 
 fn main() {
-    println!("cargo:rerun-if-changed=external/");
+    println!("cargo:rustc-link-lib=vulkan");
+    println!("cargo:rerun-if-env-changed=VULKAN_INCLUDE_PATH");
+    println!("cargo:rerun-if-env-changed=GLFW_INCLUDE_PATH");
+    println!("cargo:rerun-if-env-changed=CGLM_INCLUDE_PATH");
+    println!("cargo:rerun-if-env-changed=OPENXR_INCLUDE_PATH");
 
-    let repositories = vec![
+    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+
+    let libraries = vec![
         (
             "vulkan",
             "https://github.com/KhronosGroup/Vulkan-Headers.git",
-            "external/Vulkan-Headers-main",
             "v1.3.302",
             "include/vulkan/vulkan.h",
-            vec!["-Iexternal/Vulkan-Headers-main/include"],
-            vec!["vulkan.*"],
+            "VULKAN_INCLUDE_PATH",
             vec!["Vk.*"],
-            vec!["VK.*"],
+            vec!["VK_.*"],
         ),
         (
             "glfw",
             "https://github.com/glfw/glfw.git",
-            "external/glfw-master",
             "3.4",
             "include/GLFW/glfw3.h",
-            vec!["-Iexternal/glfw-master/include"],
+            "GLFW_INCLUDE_PATH",
             vec!["glfw.*"],
             vec!["GLFW.*"],
-            vec!["GLFW_.*"],
         ),
         (
             "cglm",
             "https://github.com/recp/cglm.git",
-            "external/cglm-master",
             "v0.9.4",
             "include/cglm/cglm.h",
-            vec!["-Iexternal/cglm-master/include"],
+            "CGLM_INCLUDE_PATH",
             vec!["glm_.*"],
             vec![".*cglm.*"],
-            vec!["CGLM.*"],
         ),
         (
             "openxr",
             "https://github.com/KhronosGroup/OpenXR-SDK.git",
-            "external/OpenXR-SDK-main",
             "release-1.1.43",
             "include/openxr/openxr.h",
-            vec!["-Iexternal/OpenXR-SDK-main/include"],
+            "OPENXR_INCLUDE_PATH",
             vec!["xr.*"],
             vec!["Xr.*"],
-            vec!["XR_.*"],
         ),
     ];
-    
-    let bindings_dir = PathBuf::from("src/bindings");
-    fs::create_dir_all(&bindings_dir).expect("Failed to create bindings directory");
 
-    let external_dir = PathBuf::from("external");
-    if !external_dir.exists() {
-        fs::create_dir_all(&external_dir).expect("Failed to create external directory");
+    for (lib_name, repo_url, version, header_path, env_var, type_allowlist, var_allowlist) in libraries {
+        // Clone repositories into OUT_DIR/repos
+        let repo_dir_path = out_path.join("repos").join(format!("{}-{}", lib_name, version));
+
+        if let Err(e) = clone_and_checkout(repo_url, &repo_dir_path, version) {
+            panic!("Failed to clone or checkout repository {}: {}", repo_url, e);
+        }
+
+        // Construct paths
+        let include_path = env::var(env_var)
+            .unwrap_or_else(|_| repo_dir_path.join("include").to_string_lossy().to_string());
+        let header = repo_dir_path.join(header_path);
+
+        // Debug paths
+        println!("Using repo directory: {}", repo_dir_path.display());
+        println!("Using header path: {}", header.display());
+        println!("Using include path: {}", include_path);
+
+        // Generate bindings in OUT_DIR/bindings
+        fs::create_dir_all(out_path.join("bindings"))
+            .unwrap_or_else(|e| panic!("Failed to create bindings directory: {}", e));
+        let bindings_path = out_path.join("bindings").join(format!("{}.rs", lib_name));
+        if !bindings_path.exists() {
+            println!("Generating bindings for {}...", lib_name);
+
+            let bindings = bindgen::Builder::default()
+                .header(header.to_string_lossy())
+                .clang_arg(format!("-I{}", include_path))
+                .blocklist_item("FP_NAN")// workaround for cglm duplicate includes
+                .blocklist_item("FP_INFINITE")
+                .blocklist_item("FP_ZERO")
+                .blocklist_item("FP_SUBNORMAL")
+                .blocklist_item("FP_NORMAL")
+                .generate()
+                .unwrap_or_else(|e| panic!("Unable to generate bindings for {}: {}", lib_name, e));
+
+            bindings
+                .write_to_file(&bindings_path)
+                .unwrap_or_else(|e| panic!("Couldn't write bindings for {}: {}", lib_name, e));
+        }
+
+        println!("cargo:rerun-if-changed={}", header.display());
     }
-
-    for (lib_name, repo_url, repo_dir, version, header_path, include_paths, function_allowlist, type_allowlist, var_allowlist) in repositories {
-        let repo_dir_path = PathBuf::from(repo_dir);
-        if !repo_dir_path.exists() {
-            println!("Cloning repository {} into {}...", repo_url, repo_dir_path.display());
-            let mut fetch_opts = FetchOptions::new();
-            fetch_opts.download_tags(AutotagOption::All);
-            let mut builder = RepoBuilder::new();
-            builder.fetch_options(fetch_opts);
-            match builder.clone(repo_url, &repo_dir_path) {
-                Ok(_) => println!("Successfully cloned repository: {}", lib_name),
-                Err(e) => panic!("Failed to clone repository {}: {}", repo_url, e),
-            }
-        }
-
-        let repo = Repository::open(&repo_dir_path).expect("Failed to open cloned repository");
-
-        // Find the specific version tag
-        let obj = repo
-            .revparse_single(&format!("refs/tags/{}", version))
-            .unwrap_or_else(|e| panic!("Version {} not found in repository {}: {}", version, lib_name, e));
-
-        // Peel the object to a commit
-        let commit = obj.peel_to_commit()
-            .unwrap_or_else(|e| panic!("Failed to peel object to commit for {}: {}", lib_name, e));
-
-        // Checkout the commit
-        repo.checkout_tree(commit.as_object(), None)
-            .unwrap_or_else(|e| panic!("Failed to checkout tree for {}: {}", lib_name, e));
-
-        // Set HEAD to the commit
-        repo.set_head_detached(commit.id())
-            .unwrap_or_else(|e| panic!("Failed to set HEAD for {}: {}", lib_name, e));
-
-        println!("Generating bindings for {}...", lib_name);
-        let header_path = repo_dir_path.join(header_path);
-        if !header_path.exists() {
-            panic!("Header file not found: {}", header_path.display());
-        }
-
-        let bindings_path = bindings_dir.join(format!("{}.rs", lib_name));
-
-        let mut builder = bindgen::Builder::default()
-            .header(header_path.to_string_lossy());
-
-        for include in include_paths {
-            builder = builder.clang_arg(include);
-        }
-
-        for pattern in function_allowlist {
-            builder = builder.allowlist_function(pattern);
-        }
-
-        for pattern in type_allowlist {
-            builder = builder.allowlist_type(pattern);
-        }
-
-        for pattern in var_allowlist {
-            builder = builder.allowlist_var(pattern);
-        }
-
-        let bindings = builder
-            .generate()
-            .expect(&format!("Unable to generate bindings for {}", lib_name));
-
-        bindings
-            .write_to_file(&bindings_path)
-            .expect(&format!("Couldn't write bindings for {}!", lib_name));
-    }
-
-    println!("Bindings successfully generated in src/bindings.");
 }
