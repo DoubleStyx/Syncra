@@ -1,67 +1,54 @@
-use std::ffi::CString;
+use std::ffi::{c_int, CString};
 use std::ptr;
 
 #[allow(warnings)]
-pub mod bindings {
-    pub mod vulkan {
-        include!(concat!(env!("OUT_DIR"), "/bindings/vulkan.rs"));
-    }
-    pub mod glfw {
-        include!(concat!(env!("OUT_DIR"), "/bindings/glfw.rs"));
-    }
-    pub mod cglm {
-        include!(concat!(env!("OUT_DIR"), "/bindings/cglm.rs"));
-    }
-    pub mod openxr {
-        include!(concat!(env!("OUT_DIR"), "/bindings/openxr.rs"));
-    }
+pub mod vulkan {
+    include!(concat!(env!("OUT_DIR"), "/bindings/vulkan.rs"));
+}
+#[allow(warnings)]
+pub mod glfw {
+    include!(concat!(env!("OUT_DIR"), "/bindings/glfw.rs"));
+}
+#[allow(warnings)]
+pub mod cglm {
+    include!(concat!(env!("OUT_DIR"), "/bindings/cglm.rs"));
+}
+#[allow(warnings)]
+pub mod openxr {
+    include!(concat!(env!("OUT_DIR"), "/bindings/openxr.rs"));
 }
 
 
 pub fn main() {
     unsafe {
-        if bindings::glfw::glfwInit() == bindings::glfw::GLFW_FALSE as i32 {
+        if glfw::glfwInit() == glfw::GLFW_FALSE as i32 {
             eprintln!("Failed to initialize GLFW");
             return;
         }
     }
+    
+    unsafe { glfw::glfwWindowHint(glfw::GLFW_CLIENT_API as c_int, glfw::GLFW_NO_API as c_int); }
+    unsafe { glfw::glfwWindowHint(glfw::GLFW_RESIZABLE as c_int, glfw::GLFW_FALSE as c_int); }
+    
+    let title = CString::new("Vulkan").expect("Failed to create CString");
 
-    let window_title = CString::new("Hello GLFW").expect("Failed to create CString");
-    let window = unsafe {
-        bindings::glfw::glfwCreateWindow(
-            640,
-            480,
-            window_title.as_ptr(),
-            ptr::null_mut(),
-            ptr::null_mut(),
-        )
-    };
-
-    if window.is_null() {
-        eprintln!("Failed to create GLFW window");
-        unsafe { bindings::glfw::glfwTerminate(); }
-        return;
-    }
-
-    unsafe { bindings::glfw::glfwMakeContextCurrent(window); }
-
-    unsafe { bindings::glfw::glfwSwapInterval(1); }
+    let window =
+        unsafe {
+            glfw::glfwCreateWindow(
+                800,
+                600,
+                title.as_ptr(),
+                ptr::null_mut(),
+                ptr::null_mut(),
+            )
+        };
 
     unsafe {
-        while bindings::glfw::glfwWindowShouldClose(window) == bindings::glfw::GLFW_FALSE as i32 {
-            bindings::glfw::glClear(bindings::glfw::GL_COLOR_BUFFER_BIT);
-
-            bindings::glfw::glfwSwapBuffers(window);
-
-            bindings::glfw::glfwPollEvents();
+        while glfw::glfwWindowShouldClose(window) == glfw::GLFW_FALSE as i32 {
+            glfw::glfwPollEvents();
         }
     }
-
-    unsafe { bindings::glfw::glfwDestroyWindow(window); }
-    unsafe { bindings::glfw::glfwTerminate(); }
-
     
-
     // SyncraOS is the main driver and broker for Syncra. It drives the Vulkan renderer
     // and window/OpenXR context. It manages the lifecycles of various Syncra apps.
     // Each app is a separate C# process that may or may not be sandboxed.
