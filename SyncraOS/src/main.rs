@@ -1,6 +1,7 @@
 use std::ffi::CString;
 use std::ptr;
 
+#[allow(warnings)]
 pub mod bindings {
     pub mod vulkan {
         include!(concat!(env!("OUT_DIR"), "/bindings/vulkan.rs"));
