@@ -1,15 +1,15 @@
 pub mod bindings {
     pub mod vulkan {
-        include!(concat!(env!("OUT_DIR"), "/bindings/bindings_vulkan.rs"));
+        include!(concat!(env!("SRC_DIR"), "/bindings/vulkan.rs"));
     }
     pub mod glfw {
-        include!(concat!(env!("OUT_DIR"), "/bindings/bindings_glfw.rs"));
+        include!(concat!(env!("OUT_DIR"), "/bindings/glfw.rs"));
     }
     pub mod cglm {
-        include!(concat!(env!("OUT_DIR"), "/bindings/bindings_cglm.rs"));
+        include!(concat!(env!("OUT_DIR"), "/bindings/cglm.rs"));
     }
     pub mod openxr {
-        include!(concat!(env!("OUT_DIR"), "/bindings/bindings_openxr.rs"));
+        include!(concat!(env!("OUT_DIR"), "/bindings/openxr.rs"));
     }
 }
 

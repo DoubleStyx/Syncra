@@ -1,5 +1,6 @@
-use std::{env, fs, path::PathBuf, process::Command};
-use git2::Repository;
+use std::{env, fs, path::PathBuf};
+use bindgen;
+use git2::{Repository, FetchOptions, AutotagOption, build::RepoBuilder};
 
 fn main() {
     println!("cargo:rerun-if-changed=external/");
@@ -12,9 +13,9 @@ fn main() {
             "v1.3.302",
             "include/vulkan/vulkan.h",
             vec!["-Iexternal/Vulkan-Headers-main/include"],
-            "*",
-            "*",
-            "*",
+            vec!["vulkan.*"],
+            vec!["Vk.*"],
+            vec!["VK.*"],
         ),
         (
             "glfw",
@@ -23,9 +24,9 @@ fn main() {
             "3.4",
             "include/GLFW/glfw3.h",
             vec!["-Iexternal/glfw-master/include"],
-            "*",
-            "*",
-            "*",
+            vec!["glfw.*"],
+            vec!["GLFW.*"],
+            vec!["GLFW_.*"],
         ),
         (
             "cglm",
@@ -34,9 +35,9 @@ fn main() {
             "v0.9.4",
             "include/cglm/cglm.h",
             vec!["-Iexternal/cglm-master/include"],
-            "*",
-            "*",
-            "*",
+            vec!["glm_.*"],
+            vec![".*cglm.*"],
+            vec!["CGLM.*"],
         ),
         (
             "openxr",
@@ -45,12 +46,12 @@ fn main() {
             "release-1.1.43",
             "include/openxr/openxr.h",
             vec!["-Iexternal/OpenXR-SDK-main/include"],
-            "*",
-            "*",
-            "*",
+            vec!["xr.*"],
+            vec!["Xr.*"],
+            vec!["XR_.*"],
         ),
     ];
-
+    
     let bindings_dir = PathBuf::from("src/bindings");
     fs::create_dir_all(&bindings_dir).expect("Failed to create bindings directory");
 
@@ -63,23 +64,33 @@ fn main() {
         let repo_dir_path = PathBuf::from(repo_dir);
         if !repo_dir_path.exists() {
             println!("Cloning repository {} into {}...", repo_url, repo_dir_path.display());
-            match Repository::clone(repo_url, &repo_dir_path) {
+            let mut fetch_opts = FetchOptions::new();
+            fetch_opts.download_tags(AutotagOption::All);
+            let mut builder = RepoBuilder::new();
+            builder.fetch_options(fetch_opts);
+            match builder.clone(repo_url, &repo_dir_path) {
                 Ok(_) => println!("Successfully cloned repository: {}", lib_name),
                 Err(e) => panic!("Failed to clone repository {}: {}", repo_url, e),
-            }
-            // Verify if the directory exists after cloning
-            if !repo_dir_path.exists() {
-                panic!("Repository directory {} does not exist after cloning!", repo_dir_path.display());
             }
         }
 
         let repo = Repository::open(&repo_dir_path).expect("Failed to open cloned repository");
-        let obj = repo.revparse_ext(version)
-            .unwrap_or_else(|e| panic!("Version {} not found in repository {}: {}", version, lib_name, e))
-            .0;
-        repo.checkout_tree(&obj, None)
+
+        // Find the specific version tag
+        let obj = repo
+            .revparse_single(&format!("refs/tags/{}", version))
+            .unwrap_or_else(|e| panic!("Version {} not found in repository {}: {}", version, lib_name, e));
+
+        // Peel the object to a commit
+        let commit = obj.peel_to_commit()
+            .unwrap_or_else(|e| panic!("Failed to peel object to commit for {}: {}", lib_name, e));
+
+        // Checkout the commit
+        repo.checkout_tree(commit.as_object(), None)
             .unwrap_or_else(|e| panic!("Failed to checkout tree for {}: {}", lib_name, e));
-        repo.set_head_detached(obj.id())
+
+        // Set HEAD to the commit
+        repo.set_head_detached(commit.id())
             .unwrap_or_else(|e| panic!("Failed to set HEAD for {}: {}", lib_name, e));
 
         println!("Generating bindings for {}...", lib_name);
@@ -97,10 +108,17 @@ fn main() {
             builder = builder.clang_arg(include);
         }
 
-        builder = builder
-            .allowlist_function(function_allowlist)
-            .allowlist_type(type_allowlist)
-            .allowlist_var(var_allowlist);
+        for pattern in function_allowlist {
+            builder = builder.allowlist_function(pattern);
+        }
+
+        for pattern in type_allowlist {
+            builder = builder.allowlist_type(pattern);
+        }
+
+        for pattern in var_allowlist {
+            builder = builder.allowlist_var(pattern);
+        }
 
         let bindings = builder
             .generate()
