@@ -20,13 +20,38 @@ pub mod openxr {
 
 
 pub fn main() {
+    let app_name = CString::new("Syncra").expect("Failed to create CString");
+    let engine_name = CString::new("SyncraOS").expect("Failed to create CString");
+
+    let app_info = vulkan::VkApplicationInfo {
+        sType: vulkan::VkStructureType_VK_STRUCTURE_TYPE_APPLICATION_INFO,
+        pNext: ptr::null(),
+        pApplicationName: app_name.as_ptr(),
+        applicationVersion: 0,
+        pEngineName: engine_name.as_ptr(),
+        engineVersion: 0,
+        apiVersion: 0,
+    };
+
+    let create_info = vulkan::VkInstanceCreateInfo {
+        sType: vulkan::VkStructureType_VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+        pNext: ptr::null(),
+        flags: 0,
+        pApplicationInfo: &app_info,
+        enabledLayerCount: 0,
+        ppEnabledLayerNames: ptr::null(),
+        enabledExtensionCount: 0,
+        ppEnabledExtensionNames: ptr::null(), 
+    };
+
+    
     unsafe {
         if glfw::glfwInit() == glfw::GLFW_FALSE as i32 {
             eprintln!("Failed to initialize GLFW");
             return;
         }
     }
-    
+
     unsafe { glfw::glfwWindowHint(glfw::GLFW_CLIENT_API as c_int, glfw::GLFW_NO_API as c_int); }
     unsafe { glfw::glfwWindowHint(glfw::GLFW_RESIZABLE as c_int, glfw::GLFW_FALSE as c_int); }
     
@@ -48,6 +73,10 @@ pub fn main() {
             glfw::glfwPollEvents();
         }
     }
+
+    unsafe { glfw::glfwDestroyWindow(window); }
+
+    unsafe { glfw::glfwTerminate(); }
     
     // SyncraOS is the main driver and broker for Syncra. It drives the Vulkan renderer
     // and window/OpenXR context. It manages the lifecycles of various Syncra apps.
