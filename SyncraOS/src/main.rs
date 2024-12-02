@@ -10,6 +10,65 @@ use ash::util::read_spv;
 use glfw::{Action, Context, Key};
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
 
+// Is this needed?
+#[derive(Clone, Debug, Copy)]
+struct Vertex {
+    pos: [f32; 4],
+    color: [f32; 4],
+}
+
+// Could we flatten this?
+pub fn record_submit_commandbuffer<F: FnOnce(&Device, vk::CommandBuffer)>(
+    device: &Device,
+    command_buffer: vk::CommandBuffer,
+    command_buffer_reuse_fence: vk::Fence,
+    submit_queue: vk::Queue,
+    wait_mask: &[vk::PipelineStageFlags],
+    wait_semaphores: &[vk::Semaphore],
+    signal_semaphores: &[vk::Semaphore],
+    f: F,
+) {
+    unsafe {
+        device
+            .wait_for_fences(&[command_buffer_reuse_fence], true, u64::MAX)
+            .expect("Wait for fence failed.");
+
+        device
+            .reset_fences(&[command_buffer_reuse_fence])
+            .expect("Reset fences failed.");
+
+        device
+            .reset_command_buffer(
+                command_buffer,
+                vk::CommandBufferResetFlags::RELEASE_RESOURCES,
+            )
+            .expect("Reset command buffer failed.");
+
+        let command_buffer_begin_info = vk::CommandBufferBeginInfo::default()
+            .flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT);
+
+        device
+            .begin_command_buffer(command_buffer, &command_buffer_begin_info)
+            .expect("Begin commandbuffer");
+        f(device, command_buffer);
+        device
+            .end_command_buffer(command_buffer)
+            .expect("End commandbuffer");
+
+        let command_buffers = vec![command_buffer];
+
+        let submit_info = vk::SubmitInfo::default()
+            .wait_semaphores(wait_semaphores)
+            .wait_dst_stage_mask(wait_mask)
+            .command_buffers(&command_buffers)
+            .signal_semaphores(signal_semaphores);
+
+        device
+            .queue_submit(submit_queue, &[submit_info], command_buffer_reuse_fence)
+            .expect("queue submit failed.");
+    }
+}
+
 fn main() {
     let entry = Entry::linked();
 
@@ -255,8 +314,8 @@ fn main() {
         .viewports(&viewports);
 
     let mut vertex_spv_file =
-        Cursor::new(&include_bytes!("../../shader/triangle/vert.spv")[..]);
-    let mut frag_spv_file = Cursor::new(&include_bytes!("../../shader/triangle/frag.spv")[..]);
+        Cursor::new(&include_bytes!("vert.spv")[..]);
+    let mut frag_spv_file = Cursor::new(&include_bytes!("frag.spv")[..]);
 
     let vertex_code =
         read_spv(&mut vertex_spv_file).expect("Failed to read vertex shader spv file");
@@ -455,6 +514,125 @@ fn main() {
             .create_graphics_pipelines(vk::PipelineCache::null(), &[graphic_pipeline_info], None)
     }
         .expect("Unable to create graphics pipeline");
+
+    let present_queue = unsafe { device.get_device_queue(queue_family_index as u32, 0) };
+
+    let fence_create_info =
+        vk::FenceCreateInfo::default().flags(vk::FenceCreateFlags::SIGNALED);
+
+    let draw_commands_reuse_fence = unsafe {
+        device
+            .create_fence(&fence_create_info, None)
+    }
+        .expect("Create fence failed.");
+
+    let graphic_pipeline = graphics_pipelines[0];
+
+    let vertex_input_buffer_info = vk::BufferCreateInfo {
+        size: 3 * size_of::<Vertex>() as u64,
+        usage: vk::BufferUsageFlags::VERTEX_BUFFER,
+        sharing_mode: vk::SharingMode::EXCLUSIVE,
+        ..Default::default()
+    };
+
+    let vertex_input_buffer = unsafe {
+        device
+            .create_buffer(&vertex_input_buffer_info, None)
+    }
+        .unwrap();
+
+    let index_buffer_data = [0u32, 1, 2];
+    let index_buffer_info = vk::BufferCreateInfo::default()
+        .size(size_of_val(&index_buffer_data) as u64)
+        .usage(vk::BufferUsageFlags::INDEX_BUFFER)
+        .sharing_mode(vk::SharingMode::EXCLUSIVE);
+
+    let index_buffer = unsafe { device.create_buffer(&index_buffer_info, None) }.unwrap();
+
+    let present_images = unsafe { swapchain_loader.get_swapchain_images(swapchain) }.unwrap();
+    let present_image_views: Vec<vk::ImageView> = present_images
+        .iter()
+        .map(|&image| unsafe {
+            let create_view_info = vk::ImageViewCreateInfo::default()
+                .view_type(vk::ImageViewType::TYPE_2D)
+                .format(surface_format.format)
+                .components(vk::ComponentMapping {
+                    r: vk::ComponentSwizzle::R,
+                    g: vk::ComponentSwizzle::G,
+                    b: vk::ComponentSwizzle::B,
+                    a: vk::ComponentSwizzle::A,
+                })
+                .subresource_range(vk::ImageSubresourceRange {
+                    aspect_mask: vk::ImageAspectFlags::COLOR,
+                    base_mip_level: 0,
+                    level_count: 1,
+                    base_array_layer: 0,
+                    layer_count: 1,
+                })
+                .image(image);
+            device.create_image_view(&create_view_info, None).unwrap()
+        })
+        .collect();
+
+    let depth_image_create_info = vk::ImageCreateInfo::default()
+        .image_type(vk::ImageType::TYPE_2D)
+        .format(vk::Format::D16_UNORM)
+        .extent(surface_resolution.into())
+        .mip_levels(1)
+        .array_layers(1)
+        .samples(vk::SampleCountFlags::TYPE_1)
+        .tiling(vk::ImageTiling::OPTIMAL)
+        .usage(vk::ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT)
+        .sharing_mode(vk::SharingMode::EXCLUSIVE);
+
+    let depth_image = unsafe { device.create_image(&depth_image_create_info, None) }.unwrap();
+
+    let depth_image_view_info = vk::ImageViewCreateInfo::default()
+        .subresource_range(
+            vk::ImageSubresourceRange::default()
+                .aspect_mask(vk::ImageAspectFlags::DEPTH)
+                .level_count(1)
+                .layer_count(1),
+        )
+        .image(depth_image)
+        .format(depth_image_create_info.format)
+        .view_type(vk::ImageViewType::TYPE_2D);
+
+    let depth_image_view = unsafe {
+        device
+            .create_image_view(&depth_image_view_info, None)
+    }
+        .unwrap();
+
+    let framebuffers: Vec<vk::Framebuffer> = present_image_views
+        .iter()
+        .map(|&present_image_view| unsafe {
+            let framebuffer_attachments = [present_image_view, depth_image_view];
+            let frame_buffer_create_info = vk::FramebufferCreateInfo::default()
+                .render_pass(renderpass)
+                .attachments(&framebuffer_attachments)
+                .width(surface_resolution.width)
+                .height(surface_resolution.height)
+                .layers(1);
+
+            device
+                .create_framebuffer(&frame_buffer_create_info, None)
+                .unwrap()
+        })
+        .collect();
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     window.set_key_polling(true);
@@ -478,7 +656,8 @@ fn main() {
                 vk::Fence::null(),
             )}
             .unwrap();
-        let clear_values = [
+
+        let clear_values = vec![
             vk::ClearValue {
                 color: vk::ClearColorValue {
                     float32: [0.0, 0.0, 0.0, 0.0],
@@ -506,7 +685,7 @@ fn main() {
             &[vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT],
             &[present_complete_semaphore],
             &[rendering_complete_semaphore],
-            |device, draw_command_buffer| {
+            |device, draw_command_buffer| unsafe {
                 device.cmd_begin_render_pass(
                     draw_command_buffer,
                     &render_pass_begin_info,
@@ -539,8 +718,6 @@ fn main() {
                     0,
                     1,
                 );
-                // Or draw without the index buffer
-                // device.cmd_draw(draw_command_buffer, 3, 1, 0, 0);
                 device.cmd_end_render_pass(draw_command_buffer);
             },
         );
