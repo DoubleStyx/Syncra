@@ -513,3 +513,21 @@ src/main/resources/templates.list
 src/main/resources/gitignore/*
 src/main/resources/toptal/*
 # ================================ End of IDEA .gitignore Template ================================
+
+# ================================ Start of Godot .gitignore Template ================================
+# Godot 4+ specific ignores
+.godot/
+
+# Godot-specific ignores
+.import/
+export.cfg
+export_presets.cfg
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# Mono-specific ignores
+.mono/
+data_*/
+mono_crash.*.json
+# ================================ End of Godot .gitignore Template ================================
