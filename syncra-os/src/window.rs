@@ -129,7 +129,7 @@ impl ApplicationHandler for App<'_> {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         println!("App resumed");
         if self.window.is_none() {
-            let window = Arc::new(event_loop.create_window(Window::default_attributes()).unwrap());
+            let window = Arc::new(event_loop.create_window(Window::default_attributes().with_title("Syncra")).unwrap());
             self.window = Some(window.clone());
 
             let state = pollster::block_on(State::new(window.clone()));
