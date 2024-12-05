@@ -6,7 +6,7 @@ Check out the [SyncraEngine Discord server](https://discord.gg/yxMagwQx9A) to le
 
 ## What's this project about?
 
-The goal here is to do the whole "social VR sandbox" idea properly. A lot of sandbox games either don't support VR, have limited editing/scripting tools, don't handle UGC safely/performantly, and are generally just poorly implemented. Syncra's architecture and feature set is focused on modularity, extensibility, safety, performance, and simplicity. The main objectives here are the following:
+The goal here is to do the whole "social VR sandbox" idea properly. A lot of sandbox games either don't support VR, have limited editing/scripting tools, don't handle UGC safely/performantly, and are generally just poorly implemented. SyncraEngine's architecture and feature set is focused on modularity, extensibility, safety, performance, and simplicity. The main objectives here are the following:
 
 - **Safety and Modularity**:
   - Full process/world/script sandboxing
