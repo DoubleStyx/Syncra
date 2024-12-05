@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "syncra-engine",
+    "syncra-engine-tests",
+    "syncra-runtime",
+    "syncra-runtime-tests"
+]

@@ -1,8 +1,7 @@
 [package]
-name = "syncra-engine"
+name = "syncra-engine-tests"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-mun = "0.4.0"
-mun_runtime = "0.4.0"
+bevy = "0.15.0"
