@@ -1,9 +1,8 @@
 [package]
-name = "syncra-engine"
+name = "syncra-window"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-mun = "0.4.0"
-mun_runtime = "0.4.0"
+winit = "0.30.5"
 interprocess = "2.2.2"

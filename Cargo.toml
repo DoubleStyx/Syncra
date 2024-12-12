@@ -7,4 +7,4 @@ members = [
     "syncra-renderer",
     "syncra-runtime",
     "syncra-tests"
-]
+, "syncra-window"]

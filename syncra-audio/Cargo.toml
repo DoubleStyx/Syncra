@@ -5,3 +5,7 @@ edition = "2021"
 
 [dependencies]
 steam-audio = "0.3.0"
+cpal = "0.15.3"
+dasp = "0.11.0"
+rustfft = "6.2.0"
+interprocess = "2.2.2"
