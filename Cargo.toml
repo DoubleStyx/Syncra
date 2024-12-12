@@ -1,7 +1,10 @@
 [workspace]
 members = [
+    "syncra-audio",
     "syncra-engine",
-    "syncra-engine-tests",
+    "syncra-gamepad",
+    "syncra-openxr",
+    "syncra-renderer",
     "syncra-runtime",
-    "syncra-runtime-tests"
+    "syncra-tests"
 ]
